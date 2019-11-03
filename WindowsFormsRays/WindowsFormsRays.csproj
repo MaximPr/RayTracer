@@ -54,6 +54,7 @@
     <Compile Include="MyPixel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Canvas.cs" />
     <Compile Include="SceneData.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="Vector.cs" />

@@ -7,37 +7,15 @@ namespace WindowsFormsRays
 {
     public class Tracer
     {
-        private int w;
-        private int h;
-
-        public delegate float QueryDatabase(Vector position, out int hitType);
-
+        private Canvas canvas;
         private SceneData scene;
-        public Tracer(int w, int h, SceneData scene)
+        public Tracer(Canvas canvas, SceneData scene)
         {
-            this.w = w;
-            this.h = h;
+            this.canvas = canvas;
             this.scene = scene;
-
-            sourceBmp = new MyPixel[w, h];
-            bmp = new Bitmap(w, h);
         }
 
         public DateTime startTime;
-
-        volatile private MyPixel[,] sourceBmp;
-        public volatile Bitmap bmp;
-        void AddPixel(int x, int y, int r, int g, int b)
-        {
-            lock (bmp)
-            {
-                sourceBmp[x, y].c++;
-                sourceBmp[x, y].r += r;
-                sourceBmp[x, y].g += g;
-                sourceBmp[x, y].b += b;
-                bmp.SetPixel(x, y, sourceBmp[x, y].GetColor());
-            }
-        }
 
         public int p;
 
@@ -47,14 +25,14 @@ namespace WindowsFormsRays
 
             for (p = 0; p < samplesCount; p++)
             {
-                for (int y = 0; y < h; y++)
-                    for (int x = 0; x < w; x++)
+                for (int y = 0; y < canvas.h; y++)
+                    for (int x = 0; x < canvas.w; x++)
                     {
                         Vector position = new Vector(-22, 5, 25) + new Vector(randomVal(), randomVal(), randomVal()) * 0.7f;
                         //Vec position = new Vec(-20, 5, 18);
 
                         Vector goal = (new Vector(-3, 4, 0) - position).Normal();
-                        Vector left = -(new Vector(goal.z, 0, -goal.x)).Normal() * (1.0f / w);
+                        Vector left = -(new Vector(goal.z, 0, -goal.x)).Normal() * (1.0f / canvas.w);
 
                         // Cross-product to get the up vector
                         Vector up = (new Vector(goal.y * left.z - goal.z * left.y,
@@ -62,9 +40,9 @@ namespace WindowsFormsRays
                                goal.x * left.y - goal.y * left.x));
 
                         //Vec target = (goal + left * (x - w / 2 + randomVal())*0.1f + up * (y - h / 2 + randomVal())*0.1f ).Normal();
-                        Vector target = (goal + left * (x - w / 2 + randomVal()) + up * (y - h / 2 + randomVal())).Normal();
+                        Vector target = (goal + left * (x - canvas.w / 2 + randomVal()) + up * (y - canvas.h / 2 + randomVal())).Normal();
                         Vector color = Trace(position, target);
-                        AddPixel(x, y, (int)color.x, (int)color.y, (int)color.z);
+                        canvas.AddPixel(x, y, (int)color.x, (int)color.y, (int)color.z);
                     }
 
                 timeSpan = DateTime.Now - startTime;

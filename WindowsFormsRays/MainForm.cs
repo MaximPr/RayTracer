@@ -14,16 +14,18 @@ namespace WindowsFormsRays
     public partial class MainForm : Form
     {
         private readonly Thread t;
+        private readonly Thread t2;
         Tracer tracer;
+        Canvas canvas;
         public MainForm()
         {
             InitializeComponent();
             //int w = 960, h = 540;
             int w = pictureBox1.Width, h = pictureBox1.Height;
-
+            canvas = new Canvas(w, h);
             SceneData scene = new SceneData();
 
-            tracer = new Tracer(w, h, scene);
+            tracer = new Tracer(canvas, scene);
 
             t = new Thread(() =>
             {
@@ -34,19 +36,25 @@ namespace WindowsFormsRays
 
                 stop = true;
             });
-            t.Start();
 
-            pictureBox1.Image = tracer.bmp;
+            var tracer2 = new Tracer(canvas, scene);
+
+            t2 = new Thread(() =>
+            {
+                tracer2.InitData();
+                tracer2.Run();
+            });
+            t.Start();
+            t2.Start();
+
+            pictureBox1.Image = canvas.bmp;
         }
 
         bool stop = false;
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (tracer == null)
-                return;
-
-            lock (tracer.bmp)
+            lock (canvas.bmp)
             {
                 label1.Text = tracer.p + " iter " + tracer.timeSpan.TotalSeconds + " sec " + tracer.timeSpan.TotalSeconds / tracer.p + " spf " + tracer.steps;
                 Refresh();
@@ -59,6 +67,7 @@ namespace WindowsFormsRays
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             t.Abort();
+            t2.Abort();
         }
     }
 }
