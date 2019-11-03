@@ -14,9 +14,9 @@ namespace WindowsFormsRays
         public Color GetColor()
         {
             // Reinhard tone mapping
-            var color = new Vec(r, g, b) * (1f / c) + 14f / 241;
-            Vec o = color + 1;
-            color = new Vec(color.x / o.x, color.y / o.y, color.z / o.z) * 255;
+            var color = new Vector(r, g, b) * (1f / c) + 14f / 241;
+            Vector o = color + 1;
+            color = new Vector(color.x / o.x, color.y / o.y, color.z / o.z) * 255;
 
             return Color.FromArgb((int)color.x, (int)color.y, (int)color.z);
         }

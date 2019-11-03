@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WindowsFormsRays
 {
@@ -12,7 +10,7 @@ namespace WindowsFormsRays
         private int w;
         private int h;
 
-        public delegate float QueryDatabase(Vec position, out int hitType);
+        public delegate float QueryDatabase(Vector position, out int hitType);
 
         private QueryDatabase queryDatabase;
         public Tracer(int w, int h, QueryDatabase queryDatabase)
@@ -52,20 +50,20 @@ namespace WindowsFormsRays
                 for (int y = 0; y < h; y++)
                     for (int x = 0; x < w; x++)
                     {
-                        Vec position = new Vec(-22, 5, 25) + new Vec(randomVal(), randomVal(), randomVal()) * 0.7f;
+                        Vector position = new Vector(-22, 5, 25) + new Vector(randomVal(), randomVal(), randomVal()) * 0.7f;
                         //Vec position = new Vec(-20, 5, 18);
 
-                        Vec goal = (new Vec(-3, 4, 0) - position).Normal();
-                        Vec left = -(new Vec(goal.z, 0, -goal.x)).Normal() * (1.0f / w);
+                        Vector goal = (new Vector(-3, 4, 0) - position).Normal();
+                        Vector left = -(new Vector(goal.z, 0, -goal.x)).Normal() * (1.0f / w);
 
                         // Cross-product to get the up vector
-                        Vec up = (new Vec(goal.y * left.z - goal.z * left.y,
+                        Vector up = (new Vector(goal.y * left.z - goal.z * left.y,
                                goal.z * left.x - goal.x * left.z,
                                goal.x * left.y - goal.y * left.x));
 
                         //Vec target = (goal + left * (x - w / 2 + randomVal())*0.1f + up * (y - h / 2 + randomVal())*0.1f ).Normal();
-                        Vec target = (goal + left * (x - w / 2 + randomVal()) + up * (y - h / 2 + randomVal())).Normal();
-                        Vec color = Trace(position, target);
+                        Vector target = (goal + left * (x - w / 2 + randomVal()) + up * (y - h / 2 + randomVal())).Normal();
+                        Vector color = Trace(position, target);
                         AddPixel(x, y, (int)color.x, (int)color.y, (int)color.z);
                     }
 
@@ -87,7 +85,7 @@ namespace WindowsFormsRays
             HIT_SUN = 3,
         }
 
-        Vec[,,] dataNormal;
+        Vector[,,] dataNormal;
         float[,,] dataDist;
         float[,,] dataDistPPP;
         float[,,] dataDistPPM;
@@ -141,7 +139,7 @@ namespace WindowsFormsRays
             dataDistMMP = new float[cx + 1, cy + 1, cz + 1];
             dataDistMMM = new float[cx + 1, cy + 1, cz + 1];
             dataType = new int[cx + 1, cy + 1, cz + 1];
-            dataNormal = new Vec[cx + 1, cy + 1, cz + 1];
+            dataNormal = new Vector[cx + 1, cy + 1, cz + 1];
 
             float cellSizeX = (maxX - minX - 1) / cx;
             float cellSizeY = (maxY - minY - 1) / cy;
@@ -158,19 +156,19 @@ namespace WindowsFormsRays
                         float worldY = minY + j * (maxY - minY - 1) / cy;
                         float worldZ = minZ + k * (maxZ - minZ - 1) / cz;
 
-                        Vec hitPos = new Vec(worldX, worldY, worldZ);
+                        Vector hitPos = new Vector(worldX, worldY, worldZ);
 
                         dataDist[i, j, k] = queryDatabase(hitPos, out int hitType);
                         dataType[i, j, k] = hitType;
 
                         float d = queryDatabase(hitPos, out _);
 
-                        dataNormal[i, j, k] = new Vec(queryDatabase(hitPos + new Vec(.01f, 0), out _) - d,
-                           queryDatabase(hitPos + new Vec(0, .01f), out _) - d,
-                           queryDatabase(hitPos + new Vec(0, 0, .01f), out _) - d).Normal();
+                        dataNormal[i, j, k] = new Vector(queryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
+                           queryDatabase(hitPos + new Vector(0, .01f), out _) - d,
+                           queryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
 
                         if (float.IsNaN(dataNormal[i, j, k].x))
-                            dataNormal[i, j, k] = new Vec(0, 0, 1);
+                            dataNormal[i, j, k] = new Vector(0, 0, 1);
                     }
             }
 
@@ -185,7 +183,7 @@ namespace WindowsFormsRays
                     for (int z = 1; z < cz; z++)
                     {
                         float startMin = dataDist[x, y, z];
-                        Vec normal = dataNormal[x, y, z];
+                        Vector normal = dataNormal[x, y, z];
                         if (startMin >= diagXYZ / 2 || (normal.x <= 0 && normal.y <= 0 && normal.z <= 0))
                             startMin = float.MaxValue;
 
@@ -205,7 +203,7 @@ namespace WindowsFormsRays
                     for (int z = cz - 1; z >= 0; z--)
                     {
                         float startMin = dataDist[x, y, z];
-                        Vec normal = dataNormal[x, y, z];
+                        Vector normal = dataNormal[x, y, z];
                         if (startMin >= diagXYZ / 2 || (normal.x <= 0 && normal.y <= 0 && normal.z >= 0))
                             startMin = float.MaxValue;
 
@@ -224,7 +222,7 @@ namespace WindowsFormsRays
                     for (int z = 1; z < cz; z++)
                     {
                         float startMin = dataDist[x, y, z];
-                        Vec normal = dataNormal[x, y, z];
+                        Vector normal = dataNormal[x, y, z];
                         if (startMin >= diagXYZ / 2 || (normal.x <= 0 && normal.y >= 0 && normal.z <= 0))
                             startMin = float.MaxValue;
 
@@ -243,7 +241,7 @@ namespace WindowsFormsRays
                     for (int z = cz - 1; z >= 0; z--)
                     {
                         float startMin = dataDist[x, y, z];
-                        Vec normal = dataNormal[x, y, z];
+                        Vector normal = dataNormal[x, y, z];
                         if (startMin >= diagXYZ / 2 || (normal.x <= 0 && normal.y >= 0 && normal.z >= 0))
                             startMin = float.MaxValue;
 
@@ -262,7 +260,7 @@ namespace WindowsFormsRays
                     for (int z = 1; z < cz; z++)
                     {
                         float startMin = dataDist[x, y, z];
-                        Vec normal = dataNormal[x, y, z];
+                        Vector normal = dataNormal[x, y, z];
                         if (startMin >= diagXYZ / 2 || (normal.x >= 0 && normal.y <= 0 && normal.z <= 0))
                             startMin = float.MaxValue;
 
@@ -281,7 +279,7 @@ namespace WindowsFormsRays
                     for (int z = cz - 1; z >= 0; z--)
                     {
                         float startMin = dataDist[x, y, z];
-                        Vec normal = dataNormal[x, y, z];
+                        Vector normal = dataNormal[x, y, z];
                         if (startMin >= diagXYZ / 2 || (normal.x >= 0 && normal.y <= 0 && normal.z >= 0))
                             startMin = float.MaxValue;
 
@@ -300,7 +298,7 @@ namespace WindowsFormsRays
                     for (int z = 1; z < cz; z++)
                     {
                         float startMin = dataDist[x, y, z];
-                        Vec normal = dataNormal[x, y, z];
+                        Vector normal = dataNormal[x, y, z];
                         if (startMin >= diagXYZ / 2 || (normal.x >= 0 && normal.y >= 0 && normal.z <= 0))
                             startMin = float.MaxValue;
 
@@ -319,7 +317,7 @@ namespace WindowsFormsRays
                     for (int z = cz - 1; z >= 0; z--)
                     {
                         float startMin = dataDist[x, y, z];
-                        Vec normal = dataNormal[x, y, z];
+                        Vector normal = dataNormal[x, y, z];
                         if (startMin >= diagXYZ / 2 || (normal.x >= 0 && normal.y >= 0 && normal.z >= 0))
                             startMin = float.MaxValue;
 
@@ -334,7 +332,7 @@ namespace WindowsFormsRays
                     }
         }
 
-        int FastFastQueryDatabaseHitType(Vec position)
+        int FastFastQueryDatabaseHitType(Vector position)
         {
             float ceilX = ((position.x - minX) * cx / (maxX - minX - 1));
             float ceilY = ((position.y - minY) * cy / (maxY - minY - 1));
@@ -349,7 +347,7 @@ namespace WindowsFormsRays
             return hitType;
         }
 
-        Vec FastFastQueryDatabaseNorm(Vec position)
+        Vector FastFastQueryDatabaseNorm(Vector position)
         {
             float ceilX = ((position.x - minX) * cx / (maxX - minX - 1));
             float ceilY = ((position.y - minY) * cy / (maxY - minY - 1));
@@ -358,35 +356,35 @@ namespace WindowsFormsRays
             int j = (int)ceilY;
             int k = (int)ceilZ;
 
-            Vec v5 = dataNormal[i, j, k];
-            Vec v1 = dataNormal[i + 1, j, k];
-            Vec v2 = dataNormal[i + 1, j + 1, k];
-            Vec v3 = dataNormal[i + 1, j + 1, k + 1];
-            Vec v4 = dataNormal[i + 1, j, k + 1];
+            Vector v5 = dataNormal[i, j, k];
+            Vector v1 = dataNormal[i + 1, j, k];
+            Vector v2 = dataNormal[i + 1, j + 1, k];
+            Vector v3 = dataNormal[i + 1, j + 1, k + 1];
+            Vector v4 = dataNormal[i + 1, j, k + 1];
 
-            Vec v6 = dataNormal[i, j + 1, k];
-            Vec v7 = dataNormal[i, j + 1, k + 1];
-            Vec v8 = dataNormal[i, j, k + 1];
+            Vector v6 = dataNormal[i, j + 1, k];
+            Vector v7 = dataNormal[i, j + 1, k + 1];
+            Vector v8 = dataNormal[i, j, k + 1];
 
             float l = ceilX - i;
             float s = ceilY - j;
             float m = ceilZ - k;
 
-            Vec a = (v1 - v5) * l + v5;
-            Vec b = (v2 - v6) * l + v6;
+            Vector a = (v1 - v5) * l + v5;
+            Vector b = (v2 - v6) * l + v6;
 
-            Vec c = (v4 - v8) * l + v8;
-            Vec d = (v3 - v7) * l + v7;
+            Vector c = (v4 - v8) * l + v8;
+            Vector d = (v3 - v7) * l + v7;
 
-            Vec e = (b - a) * s + a;
-            Vec f = (d - c) * s + c;
+            Vector e = (b - a) * s + a;
+            Vector f = (d - c) * s + c;
 
-            Vec res = (f - e) * m + e;
+            Vector res = (f - e) * m + e;
             return res;
         }
         public int steps = 0;
         // Sample the world using Signed Distance Fields.
-        float FastFastQueryDatabase(Vec position, float[,,] data)//, out int hitType)
+        float FastFastQueryDatabase(Vector position, float[,,] data)//, out int hitType)
         {
             steps++;
             float ceilX = ((position.x - minX) * cx / (maxX - minX - 1));
@@ -429,7 +427,7 @@ namespace WindowsFormsRays
 
         }
 
-        float[,,] GetDataDist(Vec direction)
+        float[,,] GetDataDist(Vector direction)
         {
             //float[,,] data = dataDist;
             if (direction.x >= 0)
@@ -468,11 +466,11 @@ namespace WindowsFormsRays
             }
         }
 
-        int RayMarching(Vec origin, Vec direction, float accuracy)
+        int RayMarching(Vector origin, Vector direction, float accuracy)
         {
             float[,,] data = GetDataDist(direction);
 
-            Vec hitPos = origin;
+            Vector hitPos = origin;
             int hitType = (int)HitType.HIT_NONE;
             int noHitCount = 0;
             float d = FastFastQueryDatabase(hitPos, data); // distance from closest object in world.
@@ -498,7 +496,7 @@ namespace WindowsFormsRays
 
         // Perform signed sphere marching
         // Returns hitType 0, 1, 2, or 3 and update hit position/normal
-        int RayMarching(Vec origin, Vec direction, float accuracy, out Vec hitPos, out Vec hitNorm)
+        int RayMarching(Vector origin, Vector direction, float accuracy, out Vector hitPos, out Vector hitNorm)
         {
             float[,,] data = GetDataDist(direction);
 
@@ -527,9 +525,9 @@ namespace WindowsFormsRays
                         if (hitType == (int)HitType.HIT_LETTER)
                         {
                             d = queryDatabase(hitPos, out _);
-                            hitNorm = new Vec(queryDatabase(hitPos + new Vec(.01f, 0), out _) - d,
-                               queryDatabase(hitPos + new Vec(0, .01f), out _) - d,
-                               queryDatabase(hitPos + new Vec(0, 0, .01f), out _) - d).Normal();
+                            hitNorm = new Vector(queryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
+                               queryDatabase(hitPos + new Vector(0, .01f), out _) - d,
+                               queryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
 
                             //hitNorm = FastFastQueryDatabaseNorm(hitPos);
                         }
@@ -556,12 +554,12 @@ namespace WindowsFormsRays
             return 0;
         }
 
-        Vec lightDirection = new Vec(.6f, .6f, 1).Normal();// Directional light
+        Vector lightDirection = new Vector(.6f, .6f, 1).Normal();// Directional light
         public TimeSpan timeSpan;
 
-        Vec Trace(Vec origin, Vec direction)
+        Vector Trace(Vector origin, Vector direction)
         {
-            Vec color = new Vec();
+            Vector color = new Vector();
             float attenuation = 1;
             //Vec lightDirection = (new Vec(.6f, .6f, 1)).Normal(); 
             float accuracy = 0.02f;
@@ -586,27 +584,27 @@ namespace WindowsFormsRays
                     float g = normal.z < 0 ? -1 : 1;
                     float u = -1 / (g + normal.z);
                     float v = normal.x * normal.y * u;
-                    direction = new Vec(v,
+                    direction = new Vector(v,
                                     g + normal.y * normal.y * u,
                                     -normal.y) * ((float)Math.Cos(p) * s)
                                 +
-                                new Vec(1 + g * normal.x * normal.x * u,
+                                new Vector(1 + g * normal.x * normal.x * u,
                                     g * v,
                                     -g * normal.x) * ((float)Math.Sin(p) * s) + normal * (float)Math.Sqrt(c);
                     origin = sampledPosition + direction * .1f;
                     attenuation = attenuation * 0.2f;
                     if (incidence > 0)
                     {
-                        var ldir = (lightDirection * 20 + new Vec(randomVal(), randomVal(), randomVal())).Normal();
+                        var ldir = (lightDirection * 20 + new Vector(randomVal(), randomVal(), randomVal())).Normal();
                         if (RayMarching(sampledPosition + normal * .1f,
                                     ldir, accuracy) == (int)HitType.HIT_SUN)
 
-                            color = color + new Vec(500, 400, 100) * (attenuation * incidence * 0.5f);
+                            color = color + new Vector(500, 400, 100) * (attenuation * incidence * 0.5f);
                     }
                 }
                 if (hitType == (int)HitType.HIT_SUN)
                 { //
-                    color = color + new Vec(50, 80, 100) * attenuation;
+                    color = color + new Vector(50, 80, 100) * attenuation;
                     break; // Sun Color
                 }
             }
