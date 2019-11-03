@@ -12,12 +12,12 @@ namespace WindowsFormsRays
 
         public delegate float QueryDatabase(Vector position, out int hitType);
 
-        private QueryDatabase queryDatabase;
-        public Tracer(int w, int h, QueryDatabase queryDatabase)
+        private SceneData scene;
+        public Tracer(int w, int h, SceneData scene)
         {
             this.w = w;
             this.h = h;
-            this.queryDatabase = queryDatabase;
+            this.scene = scene;
 
             sourceBmp = new MyPixel[w, h];
             bmp = new Bitmap(w, h);
@@ -75,15 +75,6 @@ namespace WindowsFormsRays
 
         float min(float l, float r) { return l < r ? l : r; }
         float randomVal() { return (float)r.NextDouble(); }
-
-
-        enum HitType
-        {
-            HIT_NONE = 0,
-            HIT_LETTER = 1,
-            HIT_WALL = 2,
-            HIT_SUN = 3,
-        }
 
         Vector[,,] dataNormal;
         float[,,] dataDist;
@@ -158,14 +149,14 @@ namespace WindowsFormsRays
 
                         Vector hitPos = new Vector(worldX, worldY, worldZ);
 
-                        dataDist[i, j, k] = queryDatabase(hitPos, out int hitType);
+                        dataDist[i, j, k] = scene.QueryDatabase(hitPos, out int hitType);
                         dataType[i, j, k] = hitType;
 
-                        float d = queryDatabase(hitPos, out _);
+                        float d = scene.QueryDatabase(hitPos, out _);
 
-                        dataNormal[i, j, k] = new Vector(queryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
-                           queryDatabase(hitPos + new Vector(0, .01f), out _) - d,
-                           queryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
+                        dataNormal[i, j, k] = new Vector(scene.QueryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
+                           scene.QueryDatabase(hitPos + new Vector(0, .01f), out _) - d,
+                           scene.QueryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
 
                         if (float.IsNaN(dataNormal[i, j, k].x))
                             dataNormal[i, j, k] = new Vector(0, 0, 1);
@@ -524,10 +515,10 @@ namespace WindowsFormsRays
                     {
                         if (hitType == (int)HitType.HIT_LETTER)
                         {
-                            d = queryDatabase(hitPos, out _);
-                            hitNorm = new Vector(queryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
-                               queryDatabase(hitPos + new Vector(0, .01f), out _) - d,
-                               queryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
+                            d = scene.QueryDatabase(hitPos, out _);
+                            hitNorm = new Vector(scene.QueryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
+                               scene.QueryDatabase(hitPos + new Vector(0, .01f), out _) - d,
+                               scene.QueryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
 
                             //hitNorm = FastFastQueryDatabaseNorm(hitPos);
                         }
@@ -554,7 +545,6 @@ namespace WindowsFormsRays
             return 0;
         }
 
-        Vector lightDirection = new Vector(.6f, .6f, 1).Normal();// Directional light
         public TimeSpan timeSpan;
 
         Vector Trace(Vector origin, Vector direction)
@@ -577,7 +567,7 @@ namespace WindowsFormsRays
                 }
                 if (hitType == (int)HitType.HIT_WALL)
                 { // Wall hit uses color yellow?
-                    float incidence = normal % lightDirection;
+                    float incidence = normal % scene.lightDirection;
                     float p = 6.283185f * randomVal();
                     float c = randomVal();
                     float s = (float)Math.Sqrt(1 - c);
@@ -595,7 +585,7 @@ namespace WindowsFormsRays
                     attenuation = attenuation * 0.2f;
                     if (incidence > 0)
                     {
-                        var ldir = (lightDirection * 20 + new Vector(randomVal(), randomVal(), randomVal())).Normal();
+                        var ldir = (scene.lightDirection * 20 + new Vector(randomVal(), randomVal(), randomVal())).Normal();
                         if (RayMarching(sampledPosition + normal * .1f,
                                     ldir, accuracy) == (int)HitType.HIT_SUN)
 
