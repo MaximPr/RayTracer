@@ -9,6 +9,7 @@ namespace WindowsFormsRays
     {
         private Canvas canvas;
         private SceneData scene;
+        public event Action EndSempl;
         public Tracer(Canvas canvas, SceneData scene)
         {
             this.canvas = canvas;
@@ -21,6 +22,7 @@ namespace WindowsFormsRays
 
         public void Run()
         {
+            startTime = DateTime.Now;
             int samplesCount = 2000;
 
             for (p = 0; p < samplesCount; p++)
@@ -44,8 +46,10 @@ namespace WindowsFormsRays
                         Vector color = Trace(position, target);
                         canvas.AddPixel(x, y, (int)color.x, (int)color.y, (int)color.z);
                     }
-
+                
                 timeSpan = DateTime.Now - startTime;
+                EndSempl?.Invoke();
+                
             }
         }
 
