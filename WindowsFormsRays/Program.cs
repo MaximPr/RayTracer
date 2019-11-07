@@ -18,47 +18,18 @@ namespace WindowsFormsRays
             int w = 622;
             int h = 381;
             Canvas canvas = new Canvas(w, h);
-            //Canvas canvas2 = new Canvas(w, h);
             SceneData scene = new SceneData();
             ChacheData chacheData = new ChacheData(scene);
 
-            chacheData.InitData();
+            Tracer tracer = null;
+            List<Tracer> tracers = new List<Tracer>();
+            for (int i = 0; i < 16; i++)
+                tracers.Add(tracer = new Tracer(canvas, scene, chacheData, i));
 
-            var tracer = new Tracer(canvas, scene, chacheData, 1);
-            var tracer2 = new Tracer(canvas, scene, chacheData, 2);
-            var tracer3 = new Tracer(canvas, scene, chacheData, 3);
-            //var tracer4 = new Tracer(canvas, scene, chacheData, 4);
-
-            Thread t = new Thread(() =>
-            {
-                Thread.Sleep(1000);
-                tracer.Run();
-            });
-
-            Thread t2 = new Thread(() =>
-            {
-                Thread.Sleep(1000);
-                tracer2.Run();
-            });
-
-            Thread t3 = new Thread(() =>
-            {
-                Thread.Sleep(1000);
-                tracer3.Run();
-            });
-
-            //Thread t4 = new Thread(() =>
-            //{
-            //    Thread.Sleep(5000);
-            //    tracer4.Run();
-            //});
-
-            t.Start();
-            t2.Start();
-            t3.Start();
-            //t4.Start();
-
-            //https://habr.com/post/434528/
+            CancellationTokenSource source = new CancellationTokenSource();
+            CancellationToken token = source.Token;
+            AsyncRun(chacheData, tracers, token);
+      
             try
             {
                 Application.EnableVisualStyles();
@@ -76,11 +47,18 @@ namespace WindowsFormsRays
             }
             finally
             {
-                t.Abort();
-                t2.Abort();
-                t3.Abort();
-                //t4.Abort();
+                source.Cancel();
             }
+        }
+
+        public static async void AsyncRun(ChacheData chacheData, List<Tracer> tracers, CancellationToken cancellationToken)
+        {
+            await Task.Run(chacheData.InitData, cancellationToken);
+
+            Thread.Sleep(1000);
+            
+            foreach(var tracer in tracers)
+                tracer.AsyncRun(cancellationToken);
         }
     }
 }

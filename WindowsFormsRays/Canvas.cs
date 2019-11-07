@@ -25,11 +25,16 @@ namespace WindowsFormsRays
         {
             lock (bmp)
             {
-                sourceBmp[x, y].c++;
-                sourceBmp[x, y].r += r;
-                sourceBmp[x, y].g += g;
-                sourceBmp[x, y].b += b;
-                bmp.SetPixel(x, y, sourceBmp[x, y].GetColor());
+            //MyPixel pixel = sourceBmp[x, y];
+
+            sourceBmp[x, y].c++;
+            sourceBmp[x, y].r += r;
+            sourceBmp[x, y].g += g;
+            sourceBmp[x, y].b += b;
+            //sourceBmp[x, y] = pixel;
+            Color color = sourceBmp[x, y].GetColor();
+            
+                bmp.SetPixel(x, y, color);
             }
         }
 

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace WindowsFormsRays
 {
@@ -23,6 +25,11 @@ namespace WindowsFormsRays
         public DateTime startTime;
 
         public int p;
+
+        public async void AsyncRun(CancellationToken cancellationToken)
+        {
+            await Task.Run(Run, cancellationToken);
+        }
 
         public void Run()
         {
