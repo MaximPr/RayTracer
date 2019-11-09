@@ -13,10 +13,12 @@ namespace WindowsFormsRays
 {
     public partial class MainForm : Form
     {
-        public MainForm(Bitmap bmp)
+        public MainForm(Canvas canvas)
         {
             InitializeComponent();
-            pictureBox1.Image = bmp;
+            pictureBox1.Size = new Size { Height = canvas.h, Width = canvas.w};
+            pictureBox1.Image = canvas.bmp;
+           
         }
 
         private void timer1_Tick(object sender, EventArgs e)

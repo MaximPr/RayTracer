@@ -18,31 +18,24 @@ namespace WindowsFormsRays
             int w = 622;
             int h = 381;
             Canvas canvas = new Canvas(w, h);
-            SceneData scene = new SceneData();
-            ChacheData chacheData = new ChacheData(scene);
-
-            Tracer tracer = null;
-            List<Tracer> tracers = new List<Tracer>();
-            for (int i = 0; i < 16; i++)
-                tracers.Add(tracer = new Tracer(canvas, scene, chacheData, i));
 
             CancellationTokenSource source = new CancellationTokenSource();
-            CancellationToken token = source.Token;
-            AsyncRun(chacheData, tracers, token);
-      
             try
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
 
-                var form = new MainForm(canvas.bmp);
+                var form = new MainForm(canvas);
 
-                int iter = 0;
-                tracer.EndSempl += () =>
-                {
-                    iter++;
-                    form.Print($"{iter} iter; {tracer.timeSpan.TotalSeconds} sec; {tracer.timeSpan.TotalSeconds / iter} sec/iter;  {chacheData.steps}");
-                };
+                SceneData scene = new SceneData();
+                CacheData cacheData = new CacheData(scene);
+
+                List<Tracer> tracers = new List<Tracer>();
+                for (int i = 0; i < 8; i++)
+                    tracers.Add(new Tracer(canvas, scene, cacheData, i));
+
+                AsyncRun(form, cacheData, tracers, source.Token);
+
                 Application.Run(form);
             }
             finally
@@ -51,11 +44,19 @@ namespace WindowsFormsRays
             }
         }
 
-        public static async void AsyncRun(ChacheData chacheData, List<Tracer> tracers, CancellationToken cancellationToken)
+        public static async void AsyncRun(MainForm form, CacheData cacheData, List<Tracer> tracers, CancellationToken cancellationToken)
         {
-            await Task.Run(chacheData.InitData, cancellationToken);
+            await Task.Run(cacheData.InitData, cancellationToken);
 
-            Thread.Sleep(1000);
+            form.Print("start");
+
+            var firstTracer = tracers.FirstOrDefault();
+            int iter = 0;
+            firstTracer.EndSempl += () =>
+            {
+                iter++;
+                form.Print($"{iter} iter; {firstTracer.timeSpan.TotalSeconds} sec; {firstTracer.timeSpan.TotalSeconds / iter} sec/iter;  {cacheData.steps}");
+            };
             
             foreach(var tracer in tracers)
                 tracer.AsyncRun(cancellationToken);

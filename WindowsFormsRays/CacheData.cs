@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace WindowsFormsRays
 {
-    public class ChacheData
+    public class CacheData
     {
         private SceneData scene;
-        public ChacheData(SceneData scene)
+        public CacheData(SceneData scene)
         {
             this.scene = scene;
         }

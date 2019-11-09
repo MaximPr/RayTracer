@@ -11,10 +11,10 @@ namespace WindowsFormsRays
     {
         private volatile Canvas canvas;
         private volatile SceneData scene;
-        private volatile ChacheData chacheData;
+        private volatile CacheData chacheData;
         public event Action EndSempl;
 
-        public Tracer(Canvas canvas, SceneData scene, ChacheData chacheData, int seed)
+        public Tracer(Canvas canvas, SceneData scene, CacheData chacheData, int seed)
         {
             this.chacheData = chacheData;
             this.canvas = canvas;
@@ -35,7 +35,6 @@ namespace WindowsFormsRays
         {
             startTime = DateTime.Now;
             int samplesCount = 2000;
-
             for (p = 0; p < samplesCount; p++)
             {
                 for (int y = 0; y < canvas.h; y++)
@@ -57,7 +56,7 @@ namespace WindowsFormsRays
                         Vector color = Trace(position, target);
                         canvas.AddPixel(x, y, (int)color.x, (int)color.y, (int)color.z);
                     }
-                
+
                 timeSpan = DateTime.Now - startTime;
                 EndSempl?.Invoke();
                 
