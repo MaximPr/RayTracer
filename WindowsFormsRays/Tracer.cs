@@ -59,7 +59,6 @@ namespace WindowsFormsRays
 
                 timeSpan = DateTime.Now - startTime;
                 EndSempl?.Invoke();
-                
             }
         }
 
