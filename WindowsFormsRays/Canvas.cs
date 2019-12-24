@@ -38,21 +38,6 @@ namespace WindowsFormsRays
             }
         }
 
-        public void AddLine(int y, int[] r, int[] g, int[] b)
-        {
-            lock (sourceBmp[y])
-            {
-                for (int x = 0; x < w; x++)
-                {
-                    sourceBmp[y][x].c++;
-                    sourceBmp[y][x].r += r[x];
-                    sourceBmp[y][x].g += g[x];
-                    sourceBmp[y][x].b += b[x];
-                }
-                sourceChange[y] = true;
-            }
-        }
-
         public Bitmap bmp;
         Color[] line;
 
@@ -65,7 +50,8 @@ namespace WindowsFormsRays
                     {
                         sourceChange[y] = false;
                         for (int x = 0; x < w; x++)
-                            line[x] = sourceBmp[y][x].GetColor();
+                            if(sourceBmp[y][x].c > 0)
+                                line[x] = sourceBmp[y][x].GetColor();
                     }
 
                     for (int x = 0; x < w; x++)
