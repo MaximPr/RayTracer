@@ -20,7 +20,7 @@ namespace WindowsFormsRays
         }
 
         private volatile MyPixel[,] sourceBmp;
-        public volatile Bitmap bmp;
+        private volatile Bitmap bmp;
         public void AddPixel(int x, int y, int r, int g, int b)
         {
             lock (bmp)
@@ -38,6 +38,13 @@ namespace WindowsFormsRays
             }
         }
 
-
+        public void CopyTo(Image image)
+        {
+            lock (bmp)
+            {
+                using (var gr = Graphics.FromImage(image))
+                    gr.DrawImage(bmp, new Point());
+            }
+        }
     }
 }

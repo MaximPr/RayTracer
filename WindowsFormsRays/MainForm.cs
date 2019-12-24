@@ -13,20 +13,21 @@ namespace WindowsFormsRays
 {
     public partial class MainForm : Form
     {
+        Canvas canvas;
+
         public MainForm(Canvas canvas)
         {
             InitializeComponent();
+
+            this.canvas = canvas;
             pictureBox1.Size = new Size { Height = canvas.h, Width = canvas.w};
-            pictureBox1.Image = canvas.bmp;
-           
+            pictureBox1.Image = new Bitmap(canvas.w, canvas.h);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lock (pictureBox1.Image)
-            {
-                Refresh();
-            }
+            canvas.CopyTo(pictureBox1.Image);
+            pictureBox1.Refresh();
         }
 
         public void Print(string str)
