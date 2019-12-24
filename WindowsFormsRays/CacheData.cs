@@ -312,7 +312,7 @@ namespace WindowsFormsRays
             return res;
         }
 
-        public int steps = 0;
+        public ulong steps = 0;
 
         public float FastFastQueryDatabase(Vector position, float[,,] data)//, out int hitType)
         {
