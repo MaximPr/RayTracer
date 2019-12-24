@@ -15,36 +15,62 @@ namespace WindowsFormsRays
         {
             this.w = w;
             this.h = h;
-            sourceBmp = new MyPixel[w, h];
+            sourceBmp = new MyPixel[h][];
+            for (int y = 0; y < h; y++)
+                sourceBmp[y] = new MyPixel[w];
+            sourceChange = new bool[h];
             bmp = new Bitmap(w, h);
+            line = new Color[w];
         }
 
-        private volatile MyPixel[,] sourceBmp;
-        private volatile Bitmap bmp;
+        private volatile MyPixel[][] sourceBmp;
+        private volatile bool[] sourceChange;
+
         public void AddPixel(int x, int y, int r, int g, int b)
         {
-            lock (bmp)
+            lock (sourceBmp[y])
             {
-            //MyPixel pixel = sourceBmp[x, y];
-
-            sourceBmp[x, y].c++;
-            sourceBmp[x, y].r += r;
-            sourceBmp[x, y].g += g;
-            sourceBmp[x, y].b += b;
-            //sourceBmp[x, y] = pixel;
-            Color color = sourceBmp[x, y].GetColor();
-            
-                bmp.SetPixel(x, y, color);
+                sourceBmp[y][x].c++;
+                sourceBmp[y][x].r += r;
+                sourceBmp[y][x].g += g;
+                sourceBmp[y][x].b += b;
+                sourceChange[y] = true;
             }
         }
 
-        public void CopyTo(Image image)
+        public void AddLine(int y, int[] r, int[] g, int[] b)
         {
-            lock (bmp)
+            lock (sourceBmp[y])
             {
-                using (var gr = Graphics.FromImage(image))
-                    gr.DrawImage(bmp, new Point());
+                for (int x = 0; x < w; x++)
+                {
+                    sourceBmp[y][x].c++;
+                    sourceBmp[y][x].r += r[x];
+                    sourceBmp[y][x].g += g[x];
+                    sourceBmp[y][x].b += b[x];
+                }
+                sourceChange[y] = true;
             }
+        }
+
+        public Bitmap bmp;
+        Color[] line;
+
+        public void UpdateBitmap()
+        {
+            for (int y = 0; y < h; y++)
+                if (sourceChange[y])
+                {
+                    lock (sourceBmp[y])
+                    {
+                        sourceChange[y] = false;
+                        for (int x = 0; x < w; x++)
+                            line[x] = sourceBmp[y][x].GetColor();
+                    }
+
+                    for (int x = 0; x < w; x++)
+                        bmp.SetPixel(x, y, line[x]);
+                }
         }
     }
 }

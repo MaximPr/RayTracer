@@ -33,11 +33,15 @@ namespace WindowsFormsRays
 
         public void Run()
         {
+            int[] r = new int[canvas.w];
+            int[] g = new int[canvas.w];
+            int[] b = new int[canvas.w];
             startTime = DateTime.Now;
             int samplesCount = 2000;
             for (p = 0; p < samplesCount; p++)
             {
                 for (int y = 0; y < canvas.h; y++)
+                {
                     for (int x = 0; x < canvas.w; x++)
                     {
                         Vector position = new Vector(-22, 5, 25);// + new Vector(randomVal(), randomVal(), randomVal()) * 0.7f;
@@ -54,12 +58,16 @@ namespace WindowsFormsRays
                         //Vec target = (goal + left * (x - w / 2 + randomVal())*0.1f + up * (y - h / 2 + randomVal())*0.1f ).Normal();
                         Vector target = (goal + left * (x - canvas.w / 2 + randomVal()) + up * (y - canvas.h / 2 + randomVal())).Normal();
                         Vector color = Trace(position, target);
-                        canvas.AddPixel(x, y, (int)color.x, (int)color.y, (int)color.z);
+                        //canvas.AddPixel(x, y, (int)color.x, (int)color.y, (int)color.z);
+                        r[x] = (int)color.x;
+                        g[x] = (int)color.y;
+                        b[x] = (int)color.z;
                     }
+                    canvas.AddLine(y, r, g, b);
+                }
 
                 timeSpan = DateTime.Now - startTime;
                 EndSempl?.Invoke();
-                
             }
         }
 
