@@ -13,6 +13,7 @@ namespace WindowsFormsRays
 {
     public partial class MainForm : Form
     {
+        string labelText;
         Canvas canvas;
 
         public MainForm(Canvas canvas)
@@ -26,13 +27,19 @@ namespace WindowsFormsRays
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (labelText != null)
+            {
+                label1.Text = labelText;
+                labelText = null;
+            }
+
             canvas.UpdateBitmap();
             pictureBox1.Refresh();
         }
 
         public void Print(string str)
         {
-            Invoke(new Action(() => label1.Text = str));
+			labelText = str;
         }
     }
 }
