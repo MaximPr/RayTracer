@@ -4,22 +4,24 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WindowsFormsRays.Lights;
 using WindowsFormsRays.Materials;
+using WindowsFormsRays.RayMarchings;
 
 namespace WindowsFormsRays
 {
     public class Tracer
     {
         private volatile Canvas canvas;
-        private volatile SceneData scene;
-        private volatile CacheData chacheData;
+        private List<IRayMarching> rayMarchings;
+        private List<ILight> lights;
         public event Action EndSempl;
 
-        public Tracer(Canvas canvas, SceneData scene, CacheData chacheData, int seed)
+        public Tracer(Canvas canvas, List<IRayMarching> rayMarchings, List<ILight> lights, int seed)
         {
-            this.chacheData = chacheData;
             this.canvas = canvas;
-            this.scene = scene;
+            this.rayMarchings = rayMarchings;
+            this.lights = lights;
             r = new Random(seed);
         }
 
@@ -65,105 +67,23 @@ namespace WindowsFormsRays
 
         float randomVal() { return (float)r.NextDouble(); }
 
-
-        IMaterial RayMarching(Vector origin, Vector direction)
-        {
-            float[,,] data = chacheData.GetDataDist(direction);
-
-            Vector hitPos = origin;
-            int noHitCount = 0;
-            float d = chacheData.FastFastQueryDatabase(hitPos, data); // distance from closest object in world.
-            float prev_d;
-            // Signed distance marching
-            for (float total_d = d; total_d < 100; total_d += d)
-            {
-                //Vec prev = hitPos;
-                hitPos = origin + direction * total_d;
-                prev_d = d;
-                d = chacheData.FastFastQueryDatabase(hitPos, data);
-                //if (prev_d >= accuracy + 0.01 && d < accuracy//тут было 0.01
-                if (d < accuracy/*тут было 0.01*/ || ++noHitCount > 99 || d < 0)
-                    return chacheData.FastFastQueryDatabaseHitType(hitPos); // Weird return statement where a variable is also updated.
-            }
-
-            return null;
-        }
-
-        // Perform signed sphere marching
-        // Returns IMaterial and update hit position/normal
-        IMaterial RayMarching(Vector origin, Vector direction, out Vector hitPos, out Vector hitNorm)
-        {
-            float[,,] data = chacheData.GetDataDist(direction);
-
-            hitPos = origin;
-            hitNorm = direction;
-            int noHitCount = 0;
-            float d = chacheData.FastFastQueryDatabase(hitPos, data); // distance from closest object in world.
-            float prev_d;
-            //bool outside = false;
-            // Signed distance marching
-            for (float total_d = d; total_d < 100; total_d += d)
-            {
-                //Vec prev = hitPos;
-                hitPos = origin + direction * total_d;
-                prev_d = d;
-                d = chacheData.FastFastQueryDatabase(hitPos, data);
-                //if (prev_d >= accuracy + 0.01 && d < accuracy//тут было 0.01
-                if (d < accuracy//тут было 0.01
-                            || ++noHitCount > 99 || d < 0)
-                {
-                    var hitType = chacheData.FastFastQueryDatabaseHitType(hitPos);
-
-                    if (noHitCount < 99)
-                    {
-                        if (hitType is MirrorMaterial)
-                        {
-                            //Считаем по-честному, чтоб точность побольше была
-                            d = scene.QueryDatabase(hitPos, out _);
-                            hitNorm = scene.QueryDatabaseNorm(hitPos, d);
-                        }
-                        else
-                        {
-                            hitNorm = chacheData.FastFastQueryDatabaseNorm(hitPos);
-                        }
-                    }
-
-                    if (float.IsNaN(hitNorm.x))
-                    {
-                        //hitNorm = hitNorm;
-                        hitNorm = direction;
-                    }
-
-                    //hitPos = prev;
-                    //hitPos = (direction%hitNorm)
-                    return hitType; // Weird return statement where a variable is also updated.
-                }
-            }
-
-            return null;
-        }
-
         public TimeSpan timeSpan;
-
-        private float accuracy;
 
         Vector Trace(Vector origin, Vector direction)
         {
             Vector color = new Vector();
             float attenuation = 1;
-            accuracy = 0.02f;
-            for (int bounceCount = 0; bounceCount < 3; bounceCount++)
+            foreach(var rayMarching in rayMarchings)
             {
-                var hitType = RayMarching(origin, direction, out var sampledPosition, out var normal);
-                accuracy *= 2;
+                var hitType = rayMarching.RayMarching(origin, direction, out var sampledPosition, out var normal);
                 if (hitType == null || !hitType.ApplyColor(sampledPosition, normal, randomVal,
                     ref direction, ref origin, ref attenuation, ref color))
                     break;
 
                 if (hitType is WallMaterial)
-                    foreach (var light in scene.lights)
+                    foreach (var light in lights)
                         light.ApplyColor(sampledPosition, normal, randomVal,
-                            RayMarching, attenuation, ref color);
+                            rayMarching.RayMarching, attenuation, ref color);
             }
             return color;
         }
