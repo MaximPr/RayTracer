@@ -57,6 +57,11 @@
     <Compile Include="Canvas.cs" />
     <Compile Include="SceneData.cs" />
     <Compile Include="CacheData.cs" />
+    <Compile Include="SceneObjects\IObject3D.cs" />
+    <Compile Include="SceneObjects\Letter3D.cs" />
+    <Compile Include="SceneObjects\Room3D.cs" />
+    <Compile Include="SceneObjects\Sun3D.cs" />
+    <Compile Include="SceneObjects\Utils3D.cs" />
     <Compile Include="Tracer.cs" />
     <Compile Include="Vector.cs" />
     <EmbeddedResource Include="MainForm.resx">
