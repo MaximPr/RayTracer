@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Lights\ILight.cs" />
+    <Compile Include="Lights\DirectionLight.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

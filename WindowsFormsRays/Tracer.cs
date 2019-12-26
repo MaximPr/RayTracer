@@ -25,8 +25,6 @@ namespace WindowsFormsRays
 
         public DateTime startTime;
 
-        public int p;
-
         public async void AsyncRun(CancellationToken cancellationToken)
         {
             await Task.Run(Run, cancellationToken);
@@ -36,7 +34,7 @@ namespace WindowsFormsRays
         {
             startTime = DateTime.Now;
             int samplesCount = 2000;
-            for (p = 0; p < samplesCount; p++)
+            for (int p = 0; p < samplesCount; p++)
             {
                 for (int y = 0; y < canvas.h; y++)
                     for (int x = 0; x < canvas.w; x++)
@@ -68,7 +66,7 @@ namespace WindowsFormsRays
         float randomVal() { return (float)r.NextDouble(); }
 
 
-        IMaterial RayMarching(Vector origin, Vector direction, float accuracy)
+        IMaterial RayMarching(Vector origin, Vector direction)
         {
             float[,,] data = chacheData.GetDataDist(direction);
 
@@ -92,8 +90,8 @@ namespace WindowsFormsRays
         }
 
         // Perform signed sphere marching
-        // Returns hitType 0, 1, 2, or 3 and update hit position/normal
-        IMaterial RayMarching(Vector origin, Vector direction, float accuracy, out Vector hitPos, out Vector hitNorm)
+        // Returns IMaterial and update hit position/normal
+        IMaterial RayMarching(Vector origin, Vector direction, out Vector hitPos, out Vector hitNorm)
         {
             float[,,] data = chacheData.GetDataDist(direction);
 
@@ -147,31 +145,25 @@ namespace WindowsFormsRays
 
         public TimeSpan timeSpan;
 
+        private float accuracy;
+
         Vector Trace(Vector origin, Vector direction)
         {
             Vector color = new Vector();
             float attenuation = 1;
-            //Vec lightDirection = (new Vec(.6f, .6f, 1)).Normal(); 
-            float accuracy = 0.02f;
-            for (int bounceCount = 3; bounceCount-- > 0;)
+            accuracy = 0.02f;
+            for (int bounceCount = 0; bounceCount < 3; bounceCount++)
             {
-                var hitType = RayMarching(origin, direction, accuracy, out var sampledPosition, out var normal);
+                var hitType = RayMarching(origin, direction, out var sampledPosition, out var normal);
                 accuracy *= 2;
                 if (hitType == null || !hitType.ApplyColor(sampledPosition, normal, randomVal,
                     ref direction, ref origin, ref attenuation, ref color))
                     break;
 
-                if(hitType is WallMaterial)
-                {
-                    float incidence = normal % scene.lightDirection;
-                    if (incidence > 0)
-                    {
-                        //тут было 20 вместо 5
-                        var ldir = (scene.lightDirection * 5 + new Vector(randomVal(), randomVal(), randomVal())).Normal();
-                        if (RayMarching(sampledPosition + normal * .1f, ldir, accuracy) == scene.lightMaterial)
-                            color = color + new Vector(500, 400, 100) * (attenuation * incidence * 0.5f);
-                    }
-                }
+                if (hitType is WallMaterial)
+                    foreach (var light in scene.lights)
+                        light.ApplyColor(sampledPosition, normal, randomVal,
+                            RayMarching, attenuation, ref color);
             }
             return color;
         }
