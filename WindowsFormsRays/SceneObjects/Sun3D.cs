@@ -1,8 +1,10 @@
-﻿namespace WindowsFormsRays.SceneObjects
+﻿using WindowsFormsRays.Materials;
+
+namespace WindowsFormsRays.SceneObjects
 {
     public class Sun3D : IObject3D
     {
-        public HitType HitType => HitType.HIT_SUN;
+        public IMaterial Material { get; set; }
 
         public float GetDistance(Vector position)
         {

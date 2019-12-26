@@ -1,8 +1,10 @@
-﻿namespace WindowsFormsRays.SceneObjects
+﻿using WindowsFormsRays.Materials;
+
+namespace WindowsFormsRays.SceneObjects
 {
     public interface IObject3D
     {
-        HitType HitType { get; }
+        IMaterial Material { get; }
         float GetDistance(Vector position);
     }
 }

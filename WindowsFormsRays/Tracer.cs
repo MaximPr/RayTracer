@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays
 {
@@ -67,12 +68,11 @@ namespace WindowsFormsRays
         float randomVal() { return (float)r.NextDouble(); }
 
 
-        int RayMarching(Vector origin, Vector direction, float accuracy)
+        IMaterial RayMarching(Vector origin, Vector direction, float accuracy)
         {
             float[,,] data = chacheData.GetDataDist(direction);
 
             Vector hitPos = origin;
-            int hitType = (int)HitType.HIT_NONE;
             int noHitCount = 0;
             float d = chacheData.FastFastQueryDatabase(hitPos, data); // distance from closest object in world.
             float prev_d;
@@ -84,26 +84,21 @@ namespace WindowsFormsRays
                 prev_d = d;
                 d = chacheData.FastFastQueryDatabase(hitPos, data);
                 //if (prev_d >= accuracy + 0.01 && d < accuracy//тут было 0.01
-                if (d < accuracy//тут было 0.01
-                            || ++noHitCount > 99 || d < 0)
-                {
-                    hitType = chacheData.FastFastQueryDatabaseHitType(hitPos);
-
-                    return hitType; // Weird return statement where a variable is also updated.
-                }
+                if (d < accuracy/*тут было 0.01*/ || ++noHitCount > 99 || d < 0)
+                    return chacheData.FastFastQueryDatabaseHitType(hitPos); // Weird return statement where a variable is also updated.
             }
-            return 0;
+
+            return null;
         }
 
         // Perform signed sphere marching
         // Returns hitType 0, 1, 2, or 3 and update hit position/normal
-        int RayMarching(Vector origin, Vector direction, float accuracy, out Vector hitPos, out Vector hitNorm)
+        IMaterial RayMarching(Vector origin, Vector direction, float accuracy, out Vector hitPos, out Vector hitNorm)
         {
             float[,,] data = chacheData.GetDataDist(direction);
 
             hitPos = origin;
             hitNorm = direction;
-            int hitType = (int)HitType.HIT_NONE;
             int noHitCount = 0;
             float d = chacheData.FastFastQueryDatabase(hitPos, data); // distance from closest object in world.
             float prev_d;
@@ -119,11 +114,11 @@ namespace WindowsFormsRays
                 if (d < accuracy//тут было 0.01
                             || ++noHitCount > 99 || d < 0)
                 {
-                    hitType = chacheData.FastFastQueryDatabaseHitType(hitPos);
+                    var hitType = chacheData.FastFastQueryDatabaseHitType(hitPos);
 
                     if (noHitCount < 99)
                     {
-                        if (hitType == (int)HitType.HIT_LETTER)
+                        if (hitType is MirrorMaterial)
                         {
                             //Считаем по-честному, чтоб точность побольше была
                             d = scene.QueryDatabase(hitPos, out _);
@@ -146,7 +141,8 @@ namespace WindowsFormsRays
                     return hitType; // Weird return statement where a variable is also updated.
                 }
             }
-            return 0;
+
+            return null;
         }
 
         public TimeSpan timeSpan;
@@ -159,48 +155,22 @@ namespace WindowsFormsRays
             float accuracy = 0.02f;
             for (int bounceCount = 3; bounceCount-- > 0;)
             {
-                int hitType = RayMarching(origin, direction, accuracy, out var sampledPosition, out var normal);
+                var hitType = RayMarching(origin, direction, accuracy, out var sampledPosition, out var normal);
                 accuracy *= 2;
-                if (hitType == (int)HitType.HIT_NONE)
-                    break; // No hit. This is over, return color.
-                if (hitType == (int)HitType.HIT_LETTER)
-                { // Specular bounce on a letter. No color acc.
-                    direction = direction + normal * (normal % direction * -2);
-                    origin = sampledPosition + direction * 0.1f;
-                    attenuation = attenuation * 0.2f; // Attenuation via distance traveled.
-                }
-                if (hitType == (int)HitType.HIT_WALL)
-                { // Wall hit uses color yellow?
+                if (hitType == null || !hitType.ApplyColor(sampledPosition, normal, randomVal,
+                    ref direction, ref origin, ref attenuation, ref color))
+                    break;
+
+                if(hitType is WallMaterial)
+                {
                     float incidence = normal % scene.lightDirection;
-                    float p = 6.283185f * randomVal();
-                    float c = randomVal();
-                    float s = (float)Math.Sqrt(1 - c);
-                    float g = normal.z < 0 ? -1 : 1;
-                    float u = -1 / (g + normal.z);
-                    float v = normal.x * normal.y * u;
-                    direction = new Vector(v,
-                                    g + normal.y * normal.y * u,
-                                    -normal.y) * ((float)Math.Cos(p) * s)
-                                +
-                                new Vector(1 + g * normal.x * normal.x * u,
-                                    g * v,
-                                    -g * normal.x) * ((float)Math.Sin(p) * s) + normal * (float)Math.Sqrt(c);
-                    origin = sampledPosition + direction * .1f;
-                    attenuation = attenuation * 0.2f;
                     if (incidence > 0)
                     {
                         //тут было 20 вместо 5
                         var ldir = (scene.lightDirection * 5 + new Vector(randomVal(), randomVal(), randomVal())).Normal();
-                        if (RayMarching(sampledPosition + normal * .1f,
-                                    ldir, accuracy) == (int)HitType.HIT_SUN)
-
+                        if (RayMarching(sampledPosition + normal * .1f, ldir, accuracy) is ColorMaterial)
                             color = color + new Vector(500, 400, 100) * (attenuation * incidence * 0.5f);
                     }
-                }
-                if (hitType == (int)HitType.HIT_SUN)
-                { //
-                    color = color + new Vector(50, 80, 100) * attenuation;
-                    break; // Sun Color
                 }
             }
             return color;
