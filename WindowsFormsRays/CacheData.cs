@@ -86,15 +86,11 @@ namespace WindowsFormsRays
                         float worldZ = minZ + k * (maxZ - minZ - 1) / cz;
 
                         Vector hitPos = new Vector(worldX, worldY, worldZ);
+                        float d = scene.QueryDatabase(hitPos, out var hitType);
 
-                        dataDist[i, j, k] = scene.QueryDatabase(hitPos, out int hitType);
+                        dataDist[i, j, k] = d;
                         dataType[i, j, k] = hitType;
-
-                        float d = scene.QueryDatabase(hitPos, out _);
-
-                        dataNormal[i, j, k] = new Vector(scene.QueryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
-                           scene.QueryDatabase(hitPos + new Vector(0, .01f), out _) - d,
-                           scene.QueryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
+                        dataNormal[i, j, k] = scene.QueryDatabaseNorm(hitPos, d);
 
                         if (float.IsNaN(dataNormal[i, j, k].x))
                             dataNormal[i, j, k] = new Vector(0, 0, 1);
