@@ -168,7 +168,7 @@ namespace WindowsFormsRays
                     {
                         //тут было 20 вместо 5
                         var ldir = (scene.lightDirection * 5 + new Vector(randomVal(), randomVal(), randomVal())).Normal();
-                        if (RayMarching(sampledPosition + normal * .1f, ldir, accuracy) is ColorMaterial)
+                        if (RayMarching(sampledPosition + normal * .1f, ldir, accuracy) == scene.lightMaterial)
                             color = color + new Vector(500, 400, 100) * (attenuation * incidence * 0.5f);
                     }
                 }

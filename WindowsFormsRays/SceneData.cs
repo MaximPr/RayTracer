@@ -7,6 +7,7 @@ namespace WindowsFormsRays
 {
     public class SceneData
     {
+        public IMaterial lightMaterial;
         public Vector lightDirection = new Vector(.6f, .6f, 1).Normal();// Directional light
 
         private List<IObject3D> objects = new List<IObject3D>();
@@ -16,7 +17,7 @@ namespace WindowsFormsRays
             objects.Add(new Letter3D("PIXAR") { Material = new MirrorMaterial() });
             objects.Add(new Room3D() { Material = new WallMaterial() });
             objects.Add(new Sun3D() {
-                Material = new ColorMaterial { Color = new Vector(50, 80, 100)} //небо
+                Material = lightMaterial = new ColorMaterial { Color = new Vector(50, 80, 100)} //небо
             });
         }
 
