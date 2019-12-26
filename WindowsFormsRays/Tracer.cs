@@ -83,7 +83,7 @@ namespace WindowsFormsRays
                 if (hitType is WallMaterial)
                     foreach (var light in lights)
                         light.ApplyColor(sampledPosition, normal, randomVal,
-                            rayMarching.RayMarching, attenuation, ref color);
+                            rayMarching, attenuation, ref color);
             }
             return color;
         }
