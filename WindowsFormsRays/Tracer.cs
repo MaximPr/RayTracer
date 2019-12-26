@@ -125,19 +125,13 @@ namespace WindowsFormsRays
                     {
                         if (hitType == (int)HitType.HIT_LETTER)
                         {
+                            //Считаем по-честному, чтоб точность побольше была
                             d = scene.QueryDatabase(hitPos, out _);
-                            hitNorm = new Vector(scene.QueryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
-                               scene.QueryDatabase(hitPos + new Vector(0, .01f), out _) - d,
-                               scene.QueryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
-
-                            //hitNorm = chacheData.FastFastQueryDatabaseNorm(hitPos);
+                            hitNorm = scene.QueryDatabaseNorm(hitPos, d);
                         }
                         else
                         {
                             hitNorm = chacheData.FastFastQueryDatabaseNorm(hitPos);
-                            //hitNorm = new Vec(chacheData.FastFastQueryDatabase(hitPos + new Vec(.01f, 0)) - d,
-                            //  chacheData.FastFastQueryDatabase(hitPos + new Vec(0, .01f)) - d,
-                            //  chacheData.FastFastQueryDatabase(hitPos + new Vec(0, 0, .01f)) - d).Normal();
                         }
                     }
 

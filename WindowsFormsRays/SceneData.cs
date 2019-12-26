@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WindowsFormsRays.SceneObjects;
 
 namespace WindowsFormsRays
@@ -32,6 +33,19 @@ namespace WindowsFormsRays
             }
 
             return distance;
+        }
+
+        public Vector QueryDatabaseNorm(Vector hitPos)
+        {
+            float d = QueryDatabase(hitPos, out var _);
+            return QueryDatabaseNorm(hitPos, d);
+        }
+
+        public Vector QueryDatabaseNorm(Vector hitPos, float d)
+        {
+            return new Vector(QueryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
+                QueryDatabase(hitPos + new Vector(0, .01f), out _) - d,
+                QueryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
         }
     }
 }
