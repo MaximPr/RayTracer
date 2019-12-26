@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WindowsFormsRays.Materials;
 using WindowsFormsRays.SceneObjects;
 
 namespace WindowsFormsRays
@@ -12,15 +13,17 @@ namespace WindowsFormsRays
 
         public SceneData()
         {
-            objects.Add(new Letter3D("PIXAR"));
-            objects.Add(new Room3D());
-            objects.Add(new Sun3D());
+            objects.Add(new Letter3D("PIXAR") { Material = new MirrorMaterial() });
+            objects.Add(new Room3D() { Material = new WallMaterial() });
+            objects.Add(new Sun3D() {
+                Material = new ColorMaterial { Color = new Vector(50, 80, 100)} //небо
+            });
         }
 
         // Sample the world using Signed Distance Fields.
-        public float QueryDatabase(Vector position, out int hitType)
+        public float QueryDatabase(Vector position, out IMaterial hitType)
         {
-            hitType = (int)HitType.HIT_NONE;
+            hitType = null;
             float distance = 1e9f;
             foreach (var obj in objects)
             {
@@ -28,7 +31,7 @@ namespace WindowsFormsRays
                 if (distance > dist)
                 {
                     distance = dist;
-                    hitType = (int)obj.HitType;
+                    hitType = obj.Material;
                 }
             }
 

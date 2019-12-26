@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays
 {
@@ -25,7 +26,7 @@ namespace WindowsFormsRays
         float[,,] dataDistMPM;
         float[,,] dataDistMMP;
         float[,,] dataDistMMM;
-        int[,,] dataType;
+        IMaterial[,,] dataType;
 
         float minX = -35;
         float maxX = 35;
@@ -67,7 +68,7 @@ namespace WindowsFormsRays
             dataDistMPM = new float[cx + 1, cy + 1, cz + 1];
             dataDistMMP = new float[cx + 1, cy + 1, cz + 1];
             dataDistMMM = new float[cx + 1, cy + 1, cz + 1];
-            dataType = new int[cx + 1, cy + 1, cz + 1];
+            dataType = new IMaterial[cx + 1, cy + 1, cz + 1];
             dataNormal = new Vector[cx + 1, cy + 1, cz + 1];
 
             float cellSizeX = (maxX - minX - 1) / cx;
@@ -257,7 +258,7 @@ namespace WindowsFormsRays
                     }
         }
 
-        public int FastFastQueryDatabaseHitType(Vector position)
+        public IMaterial FastFastQueryDatabaseHitType(Vector position)
         {
             float ceilX = ((position.x - minX) * cx / (maxX - minX - 1));
             float ceilY = ((position.y - minY) * cy / (maxY - minY - 1));
@@ -265,11 +266,7 @@ namespace WindowsFormsRays
             int i = (int)ceilX;
             int j = (int)ceilY;
             int k = (int)ceilZ;
-            int hitType = dataType[(int)Math.Round(ceilX),
-                                (int)Math.Round(ceilY),
-                                (int)Math.Round(ceilZ)];
-
-            return hitType;
+            return dataType[(int)Math.Round(ceilX), (int)Math.Round(ceilY), (int)Math.Round(ceilZ)];
         }
 
         public Vector FastFastQueryDatabaseNorm(Vector position)

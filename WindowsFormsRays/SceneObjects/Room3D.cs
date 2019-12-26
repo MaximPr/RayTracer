@@ -1,10 +1,11 @@
 ﻿using System;
+using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
 {
     public class Room3D : IObject3D
     {
-        public HitType HitType => HitType.HIT_WALL;
+        public IMaterial Material { get; set; }
 
         public float GetDistance(Vector position)
         {

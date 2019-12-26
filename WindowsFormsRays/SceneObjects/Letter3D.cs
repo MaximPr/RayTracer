@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
 {
@@ -24,7 +25,7 @@ namespace WindowsFormsRays.SceneObjects
             objects.Add(new LetterCurve3D { center = new Vector(-11, -6) });
         }
 
-        public HitType HitType => HitType.HIT_LETTER;
+        public IMaterial Material { get; set; }
 
         public float GetDistance(Vector position)
         {
@@ -46,7 +47,7 @@ namespace WindowsFormsRays.SceneObjects
     public class LetterLine3D: IObject3D
     {
         public Vector begin, end;
-        public HitType HitType => HitType.HIT_LETTER;
+        public IMaterial Material { get; set; }
 
         public float GetDistance(Vector position)
         {
@@ -58,7 +59,7 @@ namespace WindowsFormsRays.SceneObjects
     public class LetterCurve3D : IObject3D
     {
         public Vector center;
-        public HitType HitType => HitType.HIT_LETTER;
+        public IMaterial Material { get; set; }
 
         public float GetDistance(Vector position)
         {
