@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsRays.RayMarchings;
 
 namespace WindowsFormsRays
 {
@@ -32,7 +33,18 @@ namespace WindowsFormsRays
 
                 List<Tracer> tracers = new List<Tracer>();
                 for (int i = 0; i < 8; i++)
-                    tracers.Add(new Tracer(canvas, scene, cacheData, i));
+                {
+                    var rayMarchings = new List<IRayMarching>()
+                    {
+                        //new RayMarchingScene(scene, 0.02f),
+                        //new RayMarchingScene(scene, 0.04f),
+                        //new RayMarchingScene(scene, 0.08f),
+                        new RayMarchingCache(scene, cacheData, 0.02f),
+                        new RayMarchingCache(scene, cacheData, 0.04f),
+                        new RayMarchingCache(scene, cacheData, 0.08f),
+                    };
+                    tracers.Add(new Tracer(canvas, rayMarchings, scene.lights, i));
+                }
 
                 AsyncRun(form, cacheData, tracers, source.Token);
 

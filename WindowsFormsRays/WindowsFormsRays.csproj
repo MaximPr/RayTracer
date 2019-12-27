@@ -60,6 +60,9 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Canvas.cs" />
+    <Compile Include="RayMarchings\IRayMarching.cs" />
+    <Compile Include="RayMarchings\RayMarchingScene.cs" />
+    <Compile Include="RayMarchings\RayMarchingCache.cs" />
     <Compile Include="SceneData.cs" />
     <Compile Include="CacheData.cs" />
     <Compile Include="SceneObjects\IObject3D.cs" />
