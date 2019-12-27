@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cameras\ICamera.cs" />
+    <Compile Include="Cameras\OrtogonalCamera.cs" />
+    <Compile Include="Cameras\PerspectiveCamera.cs" />
     <Compile Include="Lights\ILight.cs" />
     <Compile Include="Lights\DirectionLight.cs" />
     <Compile Include="MainForm.cs">

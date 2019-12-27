@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsRays.Cameras;
 using WindowsFormsRays.RayMarchings;
 
 namespace WindowsFormsRays
@@ -31,6 +32,10 @@ namespace WindowsFormsRays
                 SceneData scene = new SceneData();
                 CacheData cacheData = new CacheData(scene);
 
+                // new Vec(-20, 5, 18);
+                var camera = new PerspectiveCamera(new Vector(-22, 5, 25), new Vector(-3, 4, 0));
+                //var camera = new OrtogonalCamera(new Vector(-22+10, 5+4, 25-10), new Vector(-3+10, 4+4, 0-10));
+
                 List<Tracer> tracers = new List<Tracer>();
                 for (int i = 0; i < 8; i++)
                 {
@@ -43,7 +48,7 @@ namespace WindowsFormsRays
                         new RayMarchingCache(scene, cacheData, 0.04f),
                         new RayMarchingCache(scene, cacheData, 0.08f),
                     };
-                    tracers.Add(new Tracer(canvas, rayMarchings, scene.lights, i));
+                    tracers.Add(new Tracer(canvas, camera, rayMarchings, scene.lights, i));
                 }
 
                 AsyncRun(form, cacheData, tracers, source.Token);

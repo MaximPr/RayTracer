@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WindowsFormsRays.Cameras;
 using WindowsFormsRays.Lights;
 using WindowsFormsRays.Materials;
 using WindowsFormsRays.RayMarchings;
@@ -13,13 +14,16 @@ namespace WindowsFormsRays
     public class Tracer
     {
         private volatile Canvas canvas;
+        private ICamera camera;
         private List<IRayMarching> rayMarchings;
         private List<ILight> lights;
         public event Action EndSempl;
 
-        public Tracer(Canvas canvas, List<IRayMarching> rayMarchings, List<ILight> lights, int seed)
+        public Tracer(Canvas canvas, ICamera camera, List<IRayMarching> rayMarchings,
+            List<ILight> lights, int seed)
         {
             this.canvas = canvas;
+            this.camera = camera;
             this.rayMarchings = rayMarchings;
             this.lights = lights;
             r = new Random(seed);
@@ -41,20 +45,11 @@ namespace WindowsFormsRays
                 for (int y = 0; y < canvas.h; y++)
                     for (int x = 0; x < canvas.w; x++)
                     {
-                        Vector position = new Vector(-22, 5, 25);// + new Vector(randomVal(), randomVal(), randomVal()) * 0.7f;
-                        //Vec position = new Vec(-20, 5, 18);
-
-                        Vector goal = (new Vector(-3, 4, 0) - position).Normal();
-                        Vector left = -(new Vector(goal.z, 0, -goal.x)).Normal() * (1.0f / canvas.w);
-
-                        // Cross-product to get the up vector
-                        Vector up = (new Vector(goal.y * left.z - goal.z * left.y,
-                               goal.z * left.x - goal.x * left.z,
-                               goal.x * left.y - goal.y * left.x));
-
-                        //Vec target = (goal + left * (x - w / 2 + randomVal())*0.1f + up * (y - h / 2 + randomVal())*0.1f ).Normal();
-                        Vector target = (goal + left * (x - canvas.w / 2 + randomVal()) + up * (y - canvas.h / 2 + randomVal())).Normal();
-                        Vector color = Trace(position, target);
+                        float cameraX = (x - canvas.w / 2 + randomVal()) / canvas.w;
+                        float cameraY = (y - canvas.h / 2 + randomVal()) / canvas.w;
+                        Vector position = camera.GetPosition(cameraX, cameraY);
+                        Vector direction = camera.GetDirection(cameraX, cameraY);
+                        Vector color = Trace(position, direction);
                         canvas.AddPixel(x, y, (int)color.x, (int)color.y, (int)color.z);
                     }
 
