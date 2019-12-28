@@ -26,7 +26,7 @@ namespace WindowsFormsRays.Cameras
 
         public Vector GetPosition(float x, float y)
         {
-            return position;
+            return position; // + new Vector(randomVal(), randomVal(), randomVal()) * 0.7f;
         }
 
         public Vector GetDirection(float x, float y)
