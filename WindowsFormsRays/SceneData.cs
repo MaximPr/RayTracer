@@ -21,7 +21,7 @@ namespace WindowsFormsRays
                 Material = lightMaterial,
                 randomCoef = 0.2f
             });
-            objects.Add(new Letter3D("PIXAR") { Material = new MirrorMaterial() });
+            objects.Add(new Text3D("PIXAR") { Material = new MirrorMaterial() });
             objects.Add(new Room3D() { Material = new WallMaterial() });
             objects.Add(new Sun3D() { Material = lightMaterial });
         }
