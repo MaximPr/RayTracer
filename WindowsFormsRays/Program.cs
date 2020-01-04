@@ -37,7 +37,7 @@ namespace WindowsFormsRays
                 //var camera = new OrtogonalCamera(new Vector(-22+10, 5+4, 25-10), new Vector(-3+10, 4+4, 0-10));
 
                 List<Tracer> tracers = new List<Tracer>();
-                for (int i = 0; i < 8; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     var rayMarchings = new List<IRayMarching>()
                     {

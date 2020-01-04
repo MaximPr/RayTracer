@@ -59,7 +59,7 @@
     <Compile Include="Materials\ComplexMaterial.cs" />
     <Compile Include="Materials\MirrorMaterial.cs" />
     <Compile Include="Materials\LightMaterial.cs" />
-    <Compile Include="Materials\WallMaterial.cs" />
+    <Compile Include="Materials\DifuseMaterial.cs" />
     <Compile Include="MyPixel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
