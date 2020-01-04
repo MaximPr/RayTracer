@@ -67,20 +67,21 @@ namespace WindowsFormsRays
         Vector Trace(Vector origin, Vector direction)
         {
             Vector color = new Vector();
+            Vector colorFilter = new Vector(1, 1, 1);
             float attenuation = 1;
             foreach(var rayMarching in rayMarchings)
             {
                 var hitType = rayMarching.RayMarching(origin, direction, out var sampledPosition, out var normal);
                 if (hitType == null || !hitType.ApplyColor(sampledPosition, normal, randomVal,
-                    ref direction, ref origin, ref attenuation, ref color))
+                    ref direction, ref origin, ref attenuation, ref color, ref colorFilter))
                     break;
 
-                if (hitType is WallMaterial)
+                if (hitType is DifuseMaterial)
                     foreach (var light in lights)
                         light.ApplyColor(sampledPosition, normal, randomVal,
                             rayMarching, attenuation, ref color);
             }
-            return color;
+            return color * colorFilter;
         }
     }
 }

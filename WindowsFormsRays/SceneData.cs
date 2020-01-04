@@ -13,7 +13,7 @@ namespace WindowsFormsRays
 
         public SceneData()
         {
-            IMaterial lightMaterial = new ColorMaterial { Color = new Vector(50, 80, 100) }; //небо
+            IMaterial lightMaterial = new LightMaterial { Color = new Vector(50, 80, 100) }; //небо
             lights.Add(new DirectionLight
             {
                 Color = new Vector(500, 400, 100),
@@ -22,7 +22,7 @@ namespace WindowsFormsRays
                 randomCoef = 0.2f
             });
             objects.Add(new Text3D("PIXAR") { Material = new MirrorMaterial() });
-            objects.Add(new Room3D() { Material = new WallMaterial() });
+            objects.Add(new Room3D() { Material = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) } });
             objects.Add(new Sun3D() { Material = lightMaterial });
         }
 

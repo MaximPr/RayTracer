@@ -56,8 +56,9 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Materials\IMaterial.cs" />
+    <Compile Include="Materials\ComplexMaterial.cs" />
     <Compile Include="Materials\MirrorMaterial.cs" />
-    <Compile Include="Materials\ColorMaterial.cs" />
+    <Compile Include="Materials\LightMaterial.cs" />
     <Compile Include="Materials\WallMaterial.cs" />
     <Compile Include="MyPixel.cs" />
     <Compile Include="Program.cs" />
