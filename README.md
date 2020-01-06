@@ -19,4 +19,5 @@
 - Увеличить число направлений для расчета кеша SDF.
 
 галерея:
+
 ![Картинка для привлечения внимания](https://github.com/MaximPr/RayTracer/blob/master/screenshot2.png)
