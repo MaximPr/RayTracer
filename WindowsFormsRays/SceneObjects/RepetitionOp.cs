@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
 {
-    public class Repetition3D : IObject3D
+    public class RepetitionOp : IObject3D
     {
         public int? X, Y, Z;
         public IObject3D Object;

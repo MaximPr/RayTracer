@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
 {
-    public class Room3D : IObject3D
+    public class InvertOp : IObject3D
     {
-        public IMaterial Material { get; set; }
+        public IMaterial Material => Objects[0].Material; //TODO_deg подумать
 
         public List<IObject3D> Objects = new List<IObject3D>();
 
