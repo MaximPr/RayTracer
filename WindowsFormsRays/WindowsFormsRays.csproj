@@ -69,10 +69,12 @@
     <Compile Include="RayMarchings\RayMarchingCache.cs" />
     <Compile Include="SceneData.cs" />
     <Compile Include="CacheData.cs" />
+    <Compile Include="SceneObjects\RepetitionOp.cs" />
     <Compile Include="SceneObjects\IObject3D.cs" />
-    <Compile Include="SceneObjects\Sphere.cs" />
+    <Compile Include="SceneObjects\Box3D.cs" />
+    <Compile Include="SceneObjects\Sphere3D.cs" />
     <Compile Include="SceneObjects\Text3D.cs" />
-    <Compile Include="SceneObjects\Room3D.cs" />
+    <Compile Include="SceneObjects\InvertOp.cs" />
     <Compile Include="SceneObjects\Sun3D.cs" />
     <Compile Include="SceneObjects\Utils3D.cs" />
     <Compile Include="Tracer.cs" />

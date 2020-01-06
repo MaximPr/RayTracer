@@ -2,7 +2,7 @@
 
 namespace WindowsFormsRays.SceneObjects
 {
-    public class Sphere : IObject3D
+    public class Sphere3D : IObject3D
     {
         public IMaterial Material { get; set; }
 
