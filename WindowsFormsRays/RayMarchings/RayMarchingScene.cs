@@ -23,9 +23,9 @@ namespace WindowsFormsRays.RayMarchings
             for (float total_d = d; total_d < 100; total_d += d)
             {
                 hitPos = origin + direction * total_d;
-                d = sceneData.QueryDatabase(hitPos, out var hitType);
+                d = sceneData.QueryDatabase(hitPos, out var hitObj);
                 if (d < accuracy || ++noHitCount > 99 || d < 0)
-                    return hitType; // Weird return statement where a variable is also updated.
+                    return hitObj.Material; // Weird return statement where a variable is also updated.
             }
 
             return null;
@@ -43,16 +43,16 @@ namespace WindowsFormsRays.RayMarchings
             for (float total_d = d; total_d < 100; total_d += d)
             {
                 hitPos = origin + direction * total_d;
-                d = sceneData.QueryDatabase(hitPos, out var hitType);
+                d = sceneData.QueryDatabase(hitPos, out var hitObj);
                 if (d < accuracy || ++noHitCount > 99 || d < 0)
                 {
                     if (noHitCount < 99)
-                        hitNorm = sceneData.QueryDatabaseNorm(hitPos, d);
+                        hitNorm = sceneData.QueryDatabaseNorm(hitPos, d, hitObj);
 
                     if (float.IsNaN(hitNorm.x))
                         hitNorm = direction;
 
-                    return hitType; // Weird return statement where a variable is also updated.
+                    return hitObj.Material; // Weird return statement where a variable is also updated.
                 }
             }
 
