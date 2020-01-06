@@ -39,9 +39,9 @@ namespace WindowsFormsRays
         }
 
         // Sample the world using Signed Distance Fields.
-        public float QueryDatabase(Vector position, out IMaterial hitType)
+        public float QueryDatabase(Vector position, out IObject3D hitObj)
         {
-            hitType = null;
+            hitObj = null;
             float distance = 1e9f;
             foreach (var obj in objects)
             {
@@ -49,7 +49,7 @@ namespace WindowsFormsRays
                 if (distance > dist)
                 {
                     distance = dist;
-                    hitType = obj.Material;
+                    hitObj = obj;
                 }
             }
 
@@ -67,6 +67,13 @@ namespace WindowsFormsRays
             return new Vector(QueryDatabase(hitPos + new Vector(.01f, 0), out _) - d,
                 QueryDatabase(hitPos + new Vector(0, .01f), out _) - d,
                 QueryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
+        }
+
+        public Vector QueryDatabaseNorm(Vector hitPos, float d, IObject3D obj)
+        {
+            return new Vector(obj.GetDistance(hitPos + new Vector(.01f, 0)) - d,
+                obj.GetDistance(hitPos + new Vector(0, .01f)) - d,
+                obj.GetDistance(hitPos + new Vector(0, 0, .01f)) - d).Normal();
         }
     }
 }

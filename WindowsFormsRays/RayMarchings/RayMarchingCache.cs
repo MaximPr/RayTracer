@@ -73,8 +73,8 @@ namespace WindowsFormsRays.RayMarchings
                         if (hitType is MirrorMaterial)
                         {
                             //Считаем по-честному, чтоб точность побольше была
-                            d = sceneData.QueryDatabase(hitPos, out _);
-                            hitNorm = sceneData.QueryDatabaseNorm(hitPos, d);
+                            d = sceneData.QueryDatabase(hitPos, out var hitObj);
+                            hitNorm = sceneData.QueryDatabaseNorm(hitPos, d, hitObj);
                         }
                         else
                         {
