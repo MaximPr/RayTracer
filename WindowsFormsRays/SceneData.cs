@@ -35,6 +35,16 @@ namespace WindowsFormsRays
             //});
             objects.Add(new Text3D("PIXAR") { Material = new MirrorMaterial() });
             objects.Add(new Room3D() { Material = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) } });
+            objects.Add(new Repetition3D
+            {
+                X = 8, // Ceiling "planks" spaced 8 units apart.
+                Object = new Box3D()
+                {
+                    Material = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) },
+                    LowerLeft = new Vector(1.5f, 18.5f, -25),
+                    UpperRight = new Vector(6.5f, 20, 25)
+                }
+            });
             objects.Add(new Sun3D() { Material = lightMaterial });
         }
 
