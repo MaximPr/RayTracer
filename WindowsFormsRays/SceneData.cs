@@ -34,7 +34,13 @@ namespace WindowsFormsRays
             //    Center = new Vector(-10, 3, 0) 
             //});
             objects.Add(new Text3D("PIXAR") { Material = new MirrorMaterial() });
-            objects.Add(new Room3D() { Material = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) } });
+            objects.Add(new Room3D() {
+                Material = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) },
+                Objects = new List<IObject3D> {
+                    new Box3D { LowerLeft = new Vector(-30, -.5f, -30), UpperRight = new Vector(30, 18, 30) }, //LowerRoom
+                    new Box3D { LowerLeft = new Vector(-25, 17, -25), UpperRight = new Vector(25, 20, 25) }, //UpperRoom
+                }
+            });
             objects.Add(new Repetition3D
             {
                 X = 8, // Ceiling "planks" spaced 8 units apart.

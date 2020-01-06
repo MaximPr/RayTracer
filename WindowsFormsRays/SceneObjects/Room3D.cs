@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
@@ -7,14 +9,12 @@ namespace WindowsFormsRays.SceneObjects
     {
         public IMaterial Material { get; set; }
 
+        public List<IObject3D> Objects = new List<IObject3D>();
+
         public float GetDistance(Vector position)
         {
-            return //-min carves an empty space
-                          -Utils3D.min(// Lower room
-                               Utils3D.BoxTest(position, new Vector(-30, -.5f, -30), new Vector(30, 18, 30)),
-                               // Upper room
-                               Utils3D.BoxTest(position, new Vector(-25, 17, -25), new Vector(25, 20, 25))
-                          );
+            //-min carves an empty space
+            return -Objects.Min(x => x.GetDistance(position));
         }
     }
 }
