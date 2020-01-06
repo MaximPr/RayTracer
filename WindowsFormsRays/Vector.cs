@@ -20,5 +20,7 @@ namespace WindowsFormsRays
         public static float operator %(Vector k, Vector r) { return k.x * r.x + k.y * r.y + k.z * r.z; }
         // inverse square root
         public Vector Normal() { return this * (1 / (float)Math.Sqrt(this % this)); }
+
+        public double Magnitude() { return Math.Sqrt(this % this); }
     }
 }

@@ -21,6 +21,18 @@ namespace WindowsFormsRays
                 Material = lightMaterial,
                 randomCoef = 0.2f
             });
+
+            //objects.Add(new Sphere() {
+            //    Material = new MirrorMaterial() { Color = new Vector(1, 1, 1) },
+            //    Radius = 5, 
+            //    Center = new Vector(0, 5, 0) 
+            //});
+
+            //objects.Add(new Sphere() {
+            //    Material = new MirrorMaterial() { Color = new Vector(1f, 0.1f, 0.1f) }, 
+            //    Radius = 2, 
+            //    Center = new Vector(-10, 3, 0) 
+            //});
             objects.Add(new Text3D("PIXAR") { Material = new MirrorMaterial() });
             objects.Add(new Room3D() { Material = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) } });
             objects.Add(new Sun3D() { Material = lightMaterial });
