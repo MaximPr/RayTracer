@@ -2,9 +2,19 @@
 
 namespace WindowsFormsRays.SceneObjects
 {
-    public interface IObject3D
+    public class Object3D
     {
-        IMaterial Material { get; }
-        float GetDistance(Vector position);
+        public Object3D(IFigure3D figure, IMaterial material)
+        {
+            this.Figure = figure;
+            this.Material = material;
+        }
+
+        public IMaterial Material { get; }
+        public float GetDistance(Vector position)
+        {
+            return Figure.GetDistance(position);
+        }
+        public IFigure3D Figure { get;}
     }
 }

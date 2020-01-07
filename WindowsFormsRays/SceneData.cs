@@ -9,7 +9,7 @@ namespace WindowsFormsRays
     public class SceneData
     {
         public List<ILight> lights = new List<ILight>();
-        private List<IObject3D> objects = new List<IObject3D>();
+        private List<Object3D> objects = new List<Object3D>();
 
         public SceneData()
         {
@@ -21,37 +21,50 @@ namespace WindowsFormsRays
                 Material = lightMaterial,
                 randomCoef = 0.2f
             });
-
-            //objects.Add(new Sphere() {
-            //    Material = new MirrorMaterial() { Color = new Vector(1, 1, 1) },
-            //    Radius = 5, 
-            //    Center = new Vector(0, 5, 0) 
-            //});
-
-            //objects.Add(new Sphere() {
-            //    Material = new MirrorMaterial() { Color = new Vector(1f, 0.1f, 0.1f) }, 
-            //    Radius = 2, 
-            //    Center = new Vector(-10, 3, 0) 
-            //});
-            objects.Add(new Text3D("PIXAR") { Material = new MirrorMaterial() });
-            //Room
             var roomMaterial = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) };
-            objects.Add(new InvertOp() {
-                Objects = new List<IObject3D> {
-                    new Box3D { Material = roomMaterial, LowerLeft = new Vector(-30, -.5f, -30), UpperRight = new Vector(30, 18, 30) }, //LowerRoom
-                    new Box3D { Material = roomMaterial, LowerLeft = new Vector(-25, 17, -25), UpperRight = new Vector(25, 20, 25) }, //UpperRoom
+            //objects.Add(
+            //    new Object3D(
+            //    new SubstractionOp()
+            //    {
+            //        Object2 = new Box3D { LowerLeft = new Vector(-14f, 1f, -4f), UpperRight = new Vector(-6f, 9f, 4f) },
+
+            //        Object1 = new Sphere3D()
+            //        {
+            //            Radius = 5,
+            //            Center = new Vector(-10, 5, 0)
+            //        }
+            //    },
+            //    roomMaterial)//new MirrorMaterial() { Color = new Vector(1, 1, 1) })
+            //);
+
+            //objects.Add(new Object3D(new Sphere3D()
+            //{
+            //    Radius = 3,
+            //    Center = new Vector(-10, 5, 0)
+            //}, new MirrorMaterial() { Color = new Vector(1f, 0.1f, 0.1f) }));
+
+
+
+
+            objects.Add(new Object3D(new Text3D("PIXAR"), new MirrorMaterial()));
+            //Room
+            objects.Add(new Object3D(new InvertOp()
+            {
+                Objects = new List<IFigure3D> {
+                    new Box3D {LowerLeft = new Vector(-30, -.5f, -30), UpperRight = new Vector(30, 18, 30) }, //LowerRoom
+                    new Box3D {LowerLeft = new Vector(-25, 17, -25), UpperRight = new Vector(25, 20, 25) }, //UpperRoom
                 }
-            });
-            objects.Add(new RepetitionOp
+            }, roomMaterial));
+            objects.Add(new Object3D(new RepetitionOp
             {
                 X = 8, // Ceiling "planks" spaced 8 units apart.
-                Object = new Box3D() { Material = roomMaterial, LowerLeft = new Vector(1.5f, 18.5f, -25), UpperRight = new Vector(6.5f, 20, 25) }
-            });
-            objects.Add(new Sun3D() { Material = lightMaterial });
+                Object = new Box3D() { LowerLeft = new Vector(1.5f, 18.5f, -25), UpperRight = new Vector(6.5f, 20, 25) }
+            }, roomMaterial));
+            objects.Add(new Object3D(new Sun3D(), lightMaterial));
         }
 
         // Sample the world using Signed Distance Fields.
-        public float QueryDatabase(Vector position, out IObject3D hitObj)
+        public float QueryDatabase(Vector position, out Object3D hitObj)
         {
             hitObj = null;
             float distance = 1e9f;
@@ -81,7 +94,7 @@ namespace WindowsFormsRays
                 QueryDatabase(hitPos + new Vector(0, 0, .01f), out _) - d).Normal();
         }
 
-        public Vector QueryDatabaseNorm(Vector hitPos, float d, IObject3D obj)
+        public Vector QueryDatabaseNorm(Vector hitPos, float d, Object3D obj)
         {
             return new Vector(obj.GetDistance(hitPos + new Vector(.01f, 0)) - d,
                 obj.GetDistance(hitPos + new Vector(0, .01f)) - d,

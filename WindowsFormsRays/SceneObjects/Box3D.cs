@@ -3,9 +3,9 @@ using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
 {
-    public class Box3D : IObject3D
+    public class Box3D : IFigure3D //IObject3D
     {
-        public IMaterial Material { get; set; }
+        //public IMaterial Material { get; set; }
 
         public Vector LowerLeft, UpperRight;
 

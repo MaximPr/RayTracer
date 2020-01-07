@@ -3,12 +3,12 @@ using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
 {
-    public class RepetitionOp : IObject3D
+    public class RepetitionOp : IFigure3D
     {
         public int? X, Y, Z;
-        public IObject3D Object;
+        public IFigure3D Object;
 
-        public IMaterial Material => Object.Material;
+        //public IMaterial Material => Object.Material;
 
         public float GetDistance(Vector position)
         {

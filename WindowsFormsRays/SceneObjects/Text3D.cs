@@ -4,12 +4,12 @@ using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
 {
-    public class Text3D : IObject3D
+    public class Text3D : IFigure3D
     {
         private Vector boxMin, boxMax;
         private List<Letter3D> objects = new List<Letter3D>();
 
-        public IMaterial Material { get; set; }
+        //public IMaterial Material { get; set; }
 
         private float sizeBetween = 2;
 
@@ -48,13 +48,13 @@ namespace WindowsFormsRays.SceneObjects
         }
     }
 
-    public class Letter3D : IObject3D
+    public class Letter3D : IFigure3D
     {
         public float size;
         public float posX;
 
         private Vector boxMin, boxMax;
-        private List<IObject3D> objects = new List<IObject3D>();
+        private List<IFigure3D> objects = new List<IFigure3D>();
 
         public Letter3D(char c, float posX)
         {
@@ -112,7 +112,7 @@ namespace WindowsFormsRays.SceneObjects
             boxMax = new Vector(size, 8, 1f);
         }
 
-        public IMaterial Material { get; set; }
+        //public IMaterial Material { get; set; }
 
         public float GetDistance(Vector position)
         {
@@ -133,7 +133,7 @@ namespace WindowsFormsRays.SceneObjects
         }
     }
 
-    public class LetterLine3D : IObject3D
+    public class LetterLine3D : IFigure3D
     {
         public Vector begin, end;
         public IMaterial Material { get; set; }
@@ -145,7 +145,7 @@ namespace WindowsFormsRays.SceneObjects
         }
     }
 
-    public class LetterCurve3D : IObject3D
+    public class LetterCurve3D : IFigure3D
     {
         public float r = 2;
         public Vector center;

@@ -69,6 +69,8 @@
     <Compile Include="RayMarchings\RayMarchingCache.cs" />
     <Compile Include="SceneData.cs" />
     <Compile Include="CacheData.cs" />
+    <Compile Include="SceneObjects\IFigure3D.cs" />
+    <Compile Include="SceneObjects\SubstractionOp.cs" />
     <Compile Include="SceneObjects\RepetitionOp.cs" />
     <Compile Include="SceneObjects\IObject3D.cs" />
     <Compile Include="SceneObjects\Box3D.cs" />
