@@ -23,44 +23,34 @@ namespace WindowsFormsRays
             });
             var roomMaterial = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) };
             //objects.Add(
-            //    new Object3D(
-            //    new SubstractionOp()
-            //    {
-            //        Object2 = new Box3D { LowerLeft = new Vector(-14f, 1f, -4f), UpperRight = new Vector(-6f, 9f, 4f) },
-
-            //        Object1 = new Sphere3D()
+            //    new Box3D { LowerLeft = new Vector(-14f, 1f, -4f), UpperRight = new Vector(-6f, 9f, 4f) }
+            //    .Substract( new Sphere3D()
             //        {
             //            Radius = 5,
             //            Center = new Vector(-10, 5, 0)
-            //        }
-            //    },
-            //    roomMaterial)//new MirrorMaterial() { Color = new Vector(1, 1, 1) })
+            //        })
+            //    .SetMaterial(roomMaterial)//new MirrorMaterial() { Color = new Vector(1, 1, 1) })
             //);
 
-            //objects.Add(new Object3D(new Sphere3D()
+            //objects.Add(new Sphere3D()
             //{
             //    Radius = 3,
             //    Center = new Vector(-10, 5, 0)
-            //}, new MirrorMaterial() { Color = new Vector(1f, 0.1f, 0.1f) }));
+            //}.SetMaterial(new MirrorMaterial() { Color = new Vector(1f, 0.1f, 0.1f) }));
 
-
-
-
-            objects.Add(new Object3D(new Text3D("PIXAR"), new MirrorMaterial()));
+            objects.Add(new Text3D("PIXAR").SetMaterial(new MirrorMaterial()));
             //Room
-            objects.Add(new Object3D(new InvertOp()
+            objects.Add(new InvertOp()
             {
                 Objects = new List<IFigure3D> {
                     new Box3D {LowerLeft = new Vector(-30, -.5f, -30), UpperRight = new Vector(30, 18, 30) }, //LowerRoom
                     new Box3D {LowerLeft = new Vector(-25, 17, -25), UpperRight = new Vector(25, 20, 25) }, //UpperRoom
                 }
-            }, roomMaterial));
-            objects.Add(new Object3D(new RepetitionOp
-            {
-                X = 8, // Ceiling "planks" spaced 8 units apart.
-                Object = new Box3D() { LowerLeft = new Vector(1.5f, 18.5f, -25), UpperRight = new Vector(6.5f, 20, 25) }
-            }, roomMaterial));
-            objects.Add(new Object3D(new Sun3D(), lightMaterial));
+            }.SetMaterial(roomMaterial));
+            objects.Add(new Box3D() { LowerLeft = new Vector(1.5f, 18.5f, -25), UpperRight = new Vector(6.5f, 20, 25) }
+                .RepeatX(8)
+                .SetMaterial(roomMaterial));
+            objects.Add(new Sun3D().SetMaterial(lightMaterial));
         }
 
         // Sample the world using Signed Distance Fields.

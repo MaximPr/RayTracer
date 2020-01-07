@@ -1,12 +1,9 @@
 ﻿using System;
-using WindowsFormsRays.Materials;
 
 namespace WindowsFormsRays.SceneObjects
 {
-    public class Box3D : IFigure3D //IObject3D
+    public class Box3D : IFigure3D
     {
-        //public IMaterial Material { get; set; }
-
         public Vector LowerLeft, UpperRight;
 
         public float GetDistance(Vector position)

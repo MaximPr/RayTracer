@@ -8,8 +8,6 @@ namespace WindowsFormsRays.SceneObjects
         public int? X, Y, Z;
         public IFigure3D Object;
 
-        //public IMaterial Material => Object.Material;
-
         public float GetDistance(Vector position)
         {
             if (X.HasValue)

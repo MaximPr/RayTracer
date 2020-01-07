@@ -9,8 +9,6 @@ namespace WindowsFormsRays.SceneObjects
         private Vector boxMin, boxMax;
         private List<Letter3D> objects = new List<Letter3D>();
 
-        //public IMaterial Material { get; set; }
-
         private float sizeBetween = 2;
 
         public Text3D(string text)
@@ -111,8 +109,6 @@ namespace WindowsFormsRays.SceneObjects
             boxMin = new Vector(0, 0, -1f);
             boxMax = new Vector(size, 8, 1f);
         }
-
-        //public IMaterial Material { get; set; }
 
         public float GetDistance(Vector position)
         {

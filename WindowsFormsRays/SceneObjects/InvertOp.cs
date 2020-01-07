@@ -6,8 +6,6 @@ namespace WindowsFormsRays.SceneObjects
 {
     public class InvertOp : IFigure3D
     {
-        //public IMaterial Material => Objects[0].Material; //TODO_deg подумать
-
         public List<IFigure3D> Objects = new List<IFigure3D>();
 
         public float GetDistance(Vector position)
