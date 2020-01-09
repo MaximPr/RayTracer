@@ -70,6 +70,8 @@
     <Compile Include="SceneData.cs" />
     <Compile Include="CacheData.cs" />
     <Compile Include="SceneObjects\IFigure3D.cs" />
+    <Compile Include="SceneObjects\UnionOp.cs" />
+    <Compile Include="SceneObjects\IntersectionOp.cs" />
     <Compile Include="SceneObjects\SubstractionOp.cs" />
     <Compile Include="SceneObjects\RepetitionOp.cs" />
     <Compile Include="SceneObjects\Object3D.cs" />
