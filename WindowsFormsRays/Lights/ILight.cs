@@ -8,6 +8,6 @@ namespace WindowsFormsRays.Lights
     {
         void ApplyColor(Vector position, Vector normal, Func<float> rand,
             IRayMarching rayMarching,
-            float attenuation, ref Vector color);
+             ref Vector colorFilter, ref Vector color);
     }
 }

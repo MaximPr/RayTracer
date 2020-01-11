@@ -21,7 +21,7 @@ namespace WindowsFormsRays
                 Material = lightMaterial,
                 randomCoef = 0.2f
             });
-            var roomMaterial = new DifuseMaterial() { Color = new Vector(1f, 1f, 1f) };
+            var roomMaterial = new DifuseMaterial() { Color = new Vector(0.2f, 0.2f, 0.2f) };
             //objects.Add(
             //    new Box3D { LowerLeft = new Vector(-14f, 1f, -4f), UpperRight = new Vector(-6f, 9f, 4f) }
             //    .Substract( new Sphere3D()

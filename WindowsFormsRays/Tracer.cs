@@ -68,20 +68,19 @@ namespace WindowsFormsRays
         {
             Vector color = new Vector();
             Vector colorFilter = new Vector(1, 1, 1);
-            float attenuation = 1;
             foreach(var rayMarching in rayMarchings)
             {
                 var hitType = rayMarching.RayMarching(origin, direction, out var sampledPosition, out var normal);
                 if (hitType == null || !hitType.ApplyColor(sampledPosition, normal, randomVal,
-                    ref direction, ref origin, ref attenuation, ref color, ref colorFilter))
+                    ref direction, ref origin, ref color, ref colorFilter))
                     break;
 
                 if (hitType is DifuseMaterial)
                     foreach (var light in lights)
                         light.ApplyColor(sampledPosition, normal, randomVal,
-                            rayMarching, attenuation, ref color);
+                            rayMarching, ref colorFilter, ref color);
             }
-            return color * colorFilter;
+            return color;
         }
     }
 }

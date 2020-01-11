@@ -6,7 +6,7 @@ namespace WindowsFormsRays.Materials
     {
         public Vector Color = new Vector(0.2f, 0.2f, 0.2f);
         public bool ApplyColor(Vector position, Vector normal, Func<float> rand,
-            ref Vector direction, ref Vector origin, ref float attenuation, ref Vector color, ref Vector colorFilter)
+            ref Vector direction, ref Vector origin, ref Vector color, ref Vector colorFilter)
         {
             // Specular bounce on a letter. No color acc.
             direction = direction + normal * (normal % direction * -2);

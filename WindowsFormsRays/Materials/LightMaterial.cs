@@ -7,9 +7,9 @@ namespace WindowsFormsRays.Materials
         public Vector Color;
 
         public bool ApplyColor(Vector position, Vector normal, Func<float> rand,
-            ref Vector direction, ref Vector origin, ref float attenuation, ref Vector color, ref Vector colorFilter)
+            ref Vector direction, ref Vector origin, ref Vector color, ref Vector colorFilter)
         {
-            color += Color * attenuation;
+            color += Color * colorFilter;
             return false;
         }
     }

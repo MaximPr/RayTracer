@@ -17,14 +17,14 @@ namespace WindowsFormsRays.Lights
 
         public void ApplyColor(Vector position, Vector normal, Func<float> rand,
             IRayMarching rayMarching,
-            float attenuation, ref Vector color)
+            ref Vector colorFilter, ref Vector color)
         {
             float incidence = normal % Direction;
             if (incidence > 0)
             {
                 var ldir = (Direction + new Vector(rand(), rand(), rand()) * randomCoef).Normal();
                 if (rayMarching.RayMarching(position + normal * .1f, ldir) == Material)
-                    color += Color * (attenuation * incidence * 0.5f);
+                    color += Color * colorFilter * (incidence * 0.5f);
             }
         }
     }

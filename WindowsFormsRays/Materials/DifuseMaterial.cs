@@ -7,7 +7,7 @@ namespace WindowsFormsRays.Materials
         public Vector Color = new Vector(1, 1, 1);
 
         public bool ApplyColor(Vector position, Vector normal, Func<float> rand,
-            ref Vector direction, ref Vector origin, ref float attenuation, ref Vector color, ref Vector colorFilter)
+            ref Vector direction, ref Vector origin, ref Vector color, ref Vector colorFilter)
         {
             float p = 6.283185f * rand();
             float c = rand();
@@ -23,7 +23,6 @@ namespace WindowsFormsRays.Materials
                             g * v,
                             -g * normal.x) * ((float)Math.Sin(p) * s) + normal * (float)Math.Sqrt(c);
             origin = position + direction * .1f;
-            attenuation = attenuation * 0.2f;
             colorFilter *= Color;
             return true;
         }
