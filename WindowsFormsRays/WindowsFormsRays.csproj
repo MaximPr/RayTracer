@@ -70,6 +70,7 @@
     <Compile Include="SceneData.cs" />
     <Compile Include="CacheData.cs" />
     <Compile Include="SceneObjects\IFigure3D.cs" />
+    <Compile Include="SceneObjects\Plane3D.cs" />
     <Compile Include="SceneObjects\UnionOp.cs" />
     <Compile Include="SceneObjects\IntersectionOp.cs" />
     <Compile Include="SceneObjects\SubstractionOp.cs" />
@@ -79,7 +80,6 @@
     <Compile Include="SceneObjects\Sphere3D.cs" />
     <Compile Include="SceneObjects\Text3D.cs" />
     <Compile Include="SceneObjects\InvertOp.cs" />
-    <Compile Include="SceneObjects\Sun3D.cs" />
     <Compile Include="SceneObjects\FunctionalAPI.cs" />
     <Compile Include="SceneObjects\Utils3D.cs" />
     <Compile Include="Tracer.cs" />

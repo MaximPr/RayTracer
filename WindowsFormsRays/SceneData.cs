@@ -50,7 +50,7 @@ namespace WindowsFormsRays
             objects.Add(new Box3D() { LowerLeft = new Vector(1.5f, 18.5f, -25), UpperRight = new Vector(6.5f, 20, 25) }
                 .RepeatX(8)
                 .SetMaterial(roomMaterial));
-            objects.Add(new Sun3D().SetMaterial(lightMaterial));
+            objects.Add(Plane3D.YMinus(19.9).SetMaterial(lightMaterial));
         }
 
         // Sample the world using Signed Distance Fields.
